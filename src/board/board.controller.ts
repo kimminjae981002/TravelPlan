@@ -6,6 +6,7 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BoardService } from './board.service';
@@ -14,9 +15,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserInfo } from '../common/decorator/user.decorator';
 import { User } from '../user/user.entity';
 import { PaginateBoardDto } from '../common/dto/paginate.dto';
+import { AuthInterceptor } from '../auth/auth.interceptor';
 
 @ApiTags('Boards')
 @Controller('board')
+@UseInterceptors(AuthInterceptor)
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
@@ -44,6 +47,7 @@ export class BoardController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async findAll(@Query() query: PaginateBoardDto) {
     const { boards } = await this.boardService.findAll(query);
 
