@@ -68,7 +68,6 @@ export class UserController {
    * @param loginDto
    * @returns
    */
-  // @UseInterceptors(AuthInterceptor)
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
     const { userId, password } = loginUserDto;
