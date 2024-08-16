@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-// import { Review } from '../../review/entities/review.entity';
+import { Board } from '../board/board.entity';
 
 const role = {
   User: 'user',
@@ -37,4 +37,7 @@ export class User {
 
   @CreateDateColumn() // 생성됐을 떄의 시간
   createdAt: Date;
+
+  @OneToMany(() => Board, (board) => board.user)
+  boards: Board[];
 }
