@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, MaxLength, MinLength, IsEnum } from 'class-validator';
 import { Rating } from '../board.entity'; // enum 파일의 경로에 맞게 조정
 
-export class CreateReviewDto {
+export class CreateBoardDto {
   @ApiProperty({
     description: '리뷰 제목',
     required: true,
-    example: '훌륭한 제품!',
+    example: '잘 다녀왔습니다.',
   })
   @IsNotEmpty({ message: '제목을 작성해주세요.' })
   @MaxLength(100, { message: '제목은 100글자 이하로 해주세요.' })
@@ -15,7 +15,7 @@ export class CreateReviewDto {
   @ApiProperty({
     description: '리뷰 내용',
     required: true,
-    example: '이 제품은 정말 좋습니다. 품질이 뛰어나고, 사용하기도 편리합니다.',
+    example: '스스로 계획을 짜다니',
   })
   @IsNotEmpty({ message: '내용을 작성해주세요.' })
   @MinLength(10, { message: '내용은 10글자 이상으로 해주세요.' })
@@ -37,7 +37,7 @@ export class CreateReviewDto {
     example: '2024-08-16T14:30:00Z',
   })
   @IsNotEmpty({ message: '생성 날짜를 작성해주세요.' })
-  creationDate: string;
+  createdAt: string;
 
   @ApiProperty({
     description: '평점 (1~5)',
