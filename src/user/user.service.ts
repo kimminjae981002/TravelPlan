@@ -45,7 +45,7 @@ export class UserService {
 
   // 로그인
   async login(userId: string, password: string) {
-    const user = await this.findUserById(userId);
+    const user = await this.findUserByUserId(userId);
 
     if (!compareSync(password, user?.password ?? ''))
       throw new UnauthorizedException('비밀번호가 틀렸습니다.');
@@ -70,9 +70,13 @@ export class UserService {
       refreshToken,
     };
   }
+  // 유저의 id 찾기
+  async findUserById(id: number) {
+    return await this.userRepository.findOneBy({ id });
+  }
 
   // 유저의 유저ID 찾기
-  async findUserById(userId: string) {
+  async findUserByUserId(userId: string) {
     return await this.userRepository.findOneBy({ userId });
   }
 

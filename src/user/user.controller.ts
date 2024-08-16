@@ -8,11 +8,13 @@ import {
   Res,
   UnauthorizedException,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { AuthInterceptor } from '../auth/auth.interceptor';
 
 @ApiTags('USER')
 @Controller('user')
@@ -31,7 +33,7 @@ export class UserController {
 
     const user = await this.userService.findUserByName(name);
 
-    const existingUser = await this.userService.findUserById(userId);
+    const existingUser = await this.userService.findUserByUserId(userId);
 
     // 이미 존재하는 사용자 처리
     if (existingUser) {
@@ -66,12 +68,12 @@ export class UserController {
    * @param loginDto
    * @returns
    */
-
+  // @UseInterceptors(AuthInterceptor)
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
     const { userId, password } = loginUserDto;
 
-    const user = await this.userService.findUserById(userId);
+    const user = await this.userService.findUserByUserId(userId);
 
     if (!user)
       throw new UnauthorizedException('아이디 또는 비밀번호가 틀렸습니다.');
