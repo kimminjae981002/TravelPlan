@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { ConfigService } from '@nestjs/config';
@@ -11,7 +11,6 @@ import { BoardModule } from '../board/board.module';
 
 @Module({
   imports: [
-    AuthModule,
     TypeOrmModule.forFeature([User]),
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -21,10 +20,11 @@ import { BoardModule } from '../board/board.module';
         signOptions: { expiresIn: '1d' },
       }),
     }),
-    BoardModule,
+    forwardRef(() => AuthModule),
+    forwardRef(() => BoardModule),
   ],
   providers: [UserService, JwtStrategy],
   controllers: [UserController],
-  exports: [UserService],
+  exports: [UserService, UserModule],
 })
 export class UserModule {}
