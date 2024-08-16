@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser'; //
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,17 @@ async function bootstrap() {
   const PORT = configService.get<number>('SERVER_PORT');
 
   app.use(cookieParser());
+
+  // cors 설정
+  const corsOptions: CorsOptions = {
+    origin: '*',
+    credentials: true,
+    exposedHeaders: ['Authorization', 'Content-Type'],
+    methods: 'GET, POST, PUT, DELETE, OPTIONS',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+  };
+
+  app.enableCors(corsOptions);
 
   // dto 에러 메시지
   app.useGlobalPipes(
