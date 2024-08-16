@@ -6,16 +6,15 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { configModuleValidationSchema } from './configs/env-validation.config';
-// import { APP_INTERCEPTOR } from '@nestjs/core';
-// import { AuthInterceptor } from '../src/auth/auth.interceptor';
 import { BoardModule } from './board/board.module';
-
 @Module({
   imports: [
+    // 환경변수 로딩
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: configModuleValidationSchema,
     }),
+    // typeorm 설정
     TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions),
     AuthModule,
     UserModule,
