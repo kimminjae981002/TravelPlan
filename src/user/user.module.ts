@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { AuthModule } from '../auth/auth.module';
 import { JwtStrategy } from '../auth/jwt.strategy';
+import { BoardModule } from '../board/board.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { JwtStrategy } from '../auth/jwt.strategy';
         signOptions: { expiresIn: '1d' },
       }),
     }),
+    BoardModule,
   ],
   providers: [UserService, JwtStrategy],
   controllers: [UserController],
