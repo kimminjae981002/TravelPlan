@@ -23,23 +23,6 @@ export class CreateBoardDto {
   content: string;
 
   @ApiProperty({
-    description: '사용자 이름',
-    required: true,
-    example: '홍길동',
-  })
-  @IsNotEmpty({ message: '사용자 이름을 작성해주세요.' })
-  @MaxLength(10, { message: '사용자 이름은 10글자 이하로 해주세요.' })
-  userName: string;
-
-  @ApiProperty({
-    description: '리뷰 생성 날짜',
-    required: true,
-    example: '2024-08-16T14:30:00Z',
-  })
-  @IsNotEmpty({ message: '생성 날짜를 작성해주세요.' })
-  createdAt: string;
-
-  @ApiProperty({
     description: '평점 (1~5)',
     required: true,
     enum: Rating,

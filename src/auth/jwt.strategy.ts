@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   // 유저인지 아닌지 아니라면 401에러 Unauthorized
   async validate(payload: any) {
-    const user = await this.userService.findUserById(payload);
+    const user = await this.userService.findUserById(payload.id);
     return user;
   }
 }
