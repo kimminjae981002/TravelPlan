@@ -44,6 +44,7 @@ export class BoardController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async findAll(@Query() query: PaginateBoardDto) {
     const { boards } = await this.boardService.findAll(query);
 
