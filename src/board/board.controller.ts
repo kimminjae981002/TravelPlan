@@ -2,7 +2,10 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -16,6 +19,7 @@ import { UserInfo } from '../common/decorator/user.decorator';
 import { User } from '../user/user.entity';
 import { PaginateBoardDto } from '../common/dto/paginate.dto';
 import { AuthInterceptor } from '../auth/auth.interceptor';
+import { UpdateBoardDto } from './dto/update-board.dto';
 
 @ApiTags('Boards')
 @Controller('board')
@@ -56,5 +60,34 @@ export class BoardController {
       success: true,
       message: 'okay',
     };
+  }
+
+  @Get(':boardId')
+  @UseGuards(JwtAuthGuard)
+  async findOne(@Param('boardId') boardId: number) {
+    return await this.boardService.findOne(boardId);
+  }
+
+  @Patch(':boardId')
+  async updateBoard(
+    @Param('boardId') boardId: number,
+    @Body() updateBoardDto: UpdateBoardDto,
+  ) {
+    const updateBoard = await this.boardService.updateBoard(
+      boardId,
+      updateBoardDto,
+    );
+
+    return {
+      updateBoard,
+      success: true,
+      message: 'okay',
+    };
+  }
+  @Delete(':boardId')
+  @UseGuards(JwtAuthGuard)
+  async deleteBoard(@Param('boardId') boardId: number) {
+    await this.boardService.deleteBoard(boardId);
+    return { success: true, message: 'okay' };
   }
 }

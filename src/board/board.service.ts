@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './board.entity';
 import { Repository } from 'typeorm';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { PaginateBoardDto } from '../common/dto/paginate.dto';
-import moment from 'moment-timezone'; // Import moment-timezone
+import moment from 'moment-timezone';
+import { UpdateBoardDto } from './dto/update-board.dto';
 
 @Injectable()
 export class BoardService {
@@ -51,5 +52,58 @@ export class BoardService {
       })),
       totalCount,
     };
+  }
+
+  async findOne(@Param('boardId') boardId: number) {
+    const board = await this.boardRepository
+      .createQueryBuilder('b')
+      .select(['b.id', 'b.title', 'b.content', 'b.userName', 'b.createdAt'])
+      .where('b.id = :boardId', { boardId })
+      .getOne();
+
+    if (!board) {
+      throw new NotFoundException(`${boardId} 리뷰를 찾을 수 없습니다.`);
+    }
+
+    return {
+      id: board.id,
+      title: board.title,
+      content: board.content,
+      userName: board.userName,
+      createdAt: moment(board.createdAt)
+        .tz('Asia/Seoul')
+        .format('YYYY-MM-DD HH:mm:ss'),
+    };
+  }
+
+  async updateBoard(
+    @Param('boardId') boardId: number,
+    updateBoardDto: UpdateBoardDto,
+  ) {
+    const board = await this.boardRepository.findOne({
+      where: { id: boardId },
+    });
+
+    if (!board) {
+      throw new NotFoundException(`${boardId} 리뷰를 찾을 수 없습니다.`);
+    }
+
+    board.title = updateBoardDto.title || board.title;
+    board.content = updateBoardDto.content || board.content;
+    board.rating = updateBoardDto.rating || board.rating;
+
+    return this.boardRepository.save(board);
+  }
+
+  async deleteBoard(@Param('boardId') boardId: number) {
+    const board = await this.boardRepository.findOne({
+      where: { id: boardId },
+    });
+
+    if (!board) {
+      throw new NotFoundException(`${boardId} 리뷰를 찾을 수 없습니다.`);
+    }
+
+    return await this.boardRepository.delete(board);
   }
 }
