@@ -20,7 +20,7 @@ export class LoginUserDto {
   @ApiProperty({
     description: '비밀번호',
     required: true,
-    example: '123123123@',
+    example: 'abc123456@',
   })
   @IsNotEmpty({ message: '비밀번호를 작성해주세요.' })
   @MaxLength(20)

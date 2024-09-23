@@ -15,15 +15,14 @@ export class BoardService {
   ) {}
 
   async create(createBoardDto: CreateBoardDto, name: string) {
-    const { title, content, rating } = createBoardDto;
+    const { title, content } = createBoardDto;
     const createdAt = new Date().toLocaleString('en-US', {
       timeZone: 'Asia/Seoul',
     });
 
-    const newBoard = await this.boardRepository.create({
+    const newBoard = this.boardRepository.create({
       title,
       content,
-      rating,
       createdAt,
       userName: name,
     });
@@ -34,7 +33,14 @@ export class BoardService {
   async findAll(query: PaginateBoardDto) {
     const [boards, totalCount]: [Board[], number] = await this.boardRepository
       .createQueryBuilder('b')
-      .select(['b.id', 'b.title', 'b.content', 'b.userName', 'b.createdAt'])
+      .select([
+        'b.id',
+        'b.title',
+        'b.content',
+        'b.userName',
+        'b.createdAt',
+        'b.updatedAt',
+      ])
       .skip(query.take * (query.page - 1))
       .take(query.take)
       .orderBy('b.createdAt', query.order__createdAt)
@@ -49,7 +55,11 @@ export class BoardService {
         createdAt: moment(board.createdAt)
           .tz('Asia/Seoul')
           .format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment(board.updatedAt)
+          .tz('Asia/Seoul')
+          .format('YYYY-MM-DD HH:mm:ss'),
       })),
+
       totalCount,
     };
   }
@@ -62,7 +72,7 @@ export class BoardService {
       .getOne();
 
     if (!board) {
-      throw new NotFoundException(`${boardId} 리뷰를 찾을 수 없습니다.`);
+      throw new NotFoundException(`${boardId} 게시글을 찾을 수 없습니다.`);
     }
 
     return {
@@ -71,6 +81,9 @@ export class BoardService {
       content: board.content,
       userName: board.userName,
       createdAt: moment(board.createdAt)
+        .tz('Asia/Seoul')
+        .format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment(board.updatedAt)
         .tz('Asia/Seoul')
         .format('YYYY-MM-DD HH:mm:ss'),
     };
@@ -85,12 +98,11 @@ export class BoardService {
     });
 
     if (!board) {
-      throw new NotFoundException(`${boardId} 리뷰를 찾을 수 없습니다.`);
+      throw new NotFoundException(`${boardId} 게시글을 찾을 수 없습니다.`);
     }
 
     board.title = updateBoardDto.title || board.title;
     board.content = updateBoardDto.content || board.content;
-    board.rating = updateBoardDto.rating || board.rating;
 
     return this.boardRepository.save(board);
   }
@@ -101,7 +113,7 @@ export class BoardService {
     });
 
     if (!board) {
-      throw new NotFoundException(`${boardId} 리뷰를 찾을 수 없습니다.`);
+      throw new NotFoundException(`${boardId} 게시글을 찾을 수 없습니다.`);
     }
 
     return await this.boardRepository.delete(board);

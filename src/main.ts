@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser'; //
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,17 @@ async function bootstrap() {
   const PORT = configService.get<number>('SERVER_PORT');
 
   app.use(cookieParser());
+
+  // cors 설정
+  const corsOptions: CorsOptions = {
+    origin: '*',
+    credentials: true,
+    exposedHeaders: ['Authorization', 'Content-Type'],
+    methods: 'GET, POST, PUT, DELETE, OPTIONS',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+  };
+
+  app.enableCors(corsOptions);
 
   // dto 에러 메시지
   app.useGlobalPipes(
@@ -27,8 +39,8 @@ async function bootstrap() {
 
   // Swagger 설정
   const config = new DocumentBuilder()
-    .setTitle('Travel Plan AI Project ')
-    .setDescription('여행 일정 API')
+    .setTitle('Blog API Project ')
+    .setDescription('Blog API')
     .setVersion('1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
