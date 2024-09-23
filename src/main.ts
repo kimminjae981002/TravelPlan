@@ -39,8 +39,8 @@ async function bootstrap() {
 
   // Swagger 설정
   const config = new DocumentBuilder()
-    .setTitle('Travel Plan AI Project ')
-    .setDescription('여행 일정 API')
+    .setTitle('Blog API Project ')
+    .setDescription('Blog API')
     .setVersion('1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();

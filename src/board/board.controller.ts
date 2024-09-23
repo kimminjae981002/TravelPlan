@@ -84,6 +84,7 @@ export class BoardController {
       message: 'okay',
     };
   }
+
   @Delete(':boardId')
   @UseGuards(JwtAuthGuard)
   async deleteBoard(@Param('boardId') boardId: number) {
