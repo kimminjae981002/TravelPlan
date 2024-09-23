@@ -1,73 +1,49 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Blog API와 Docker를 이용한 프로젝트
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 주요 기능
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- **CRUD 기능**: 블로그 포스트에 대한 생성(Create), 읽기(Read), 수정(Update), 삭제(Delete) 기능 제공.
+- **인증**: JWT(JSON Web Token)를 사용한 인증 시스템으로 보안 강화.
+- **데이터베이스**: AWS RDS에 MySQL을 연동하여 데이터 저장.
+- **Docker 환경**: Docker를 통해 손쉽게 애플리케이션을 실행 가능.
+- **Swagger API**: Swagger를 이용하여 개발자 간의 협업을 돕습니다.
 
-## Description
+## 프로젝트 사용 방법
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. 프로젝트를 클론합니다.
+2. docker-compose up --build를 이용해 도커 컨테이너와 이미지를 생성하여 서버를 실행합니다.
+3. env 파일
+   SERVER_PORT =
+   JWT_SECRET_KEY =
+   HASH_ROUNDS =
 
-## Installation
+   DB_HOST =
+   DB_PORT =
+   DB_USERNAME =
+   DB_PASSWORD =
+   DB_NAME =
+   DB_SYNC =
 
-```bash
-$ npm install
-```
+   MYSQL_ROOT_PASSWORD = 도커 MySQL 컨테이너 패스워드
+   MYSQL_DATABASE = 도커 MySQL 컨테이너 데이터베이스
 
-## Running the app
+### 배포 과정
 
-```bash
-# development
-$ npm run start
+이 프로젝트는 Docker를 활용하여 AWS EC2에 배포되었습니다.
 
-# watch mode
-$ npm run start:dev
+### 기술 스택
 
-# production mode
-$ npm run start:prod
-```
+백엔드: Nest.js
+데이터베이스: MySQL (AWS RDS)
+배포: Docker, AWS EC2
 
-## Test
+#### Docker란?
 
-```bash
-# unit tests
-$ npm run test
+- 컨테이너를 사용하여 각각의 프로그램을 분리된 환경에서 실행 및 관리할 수 있는 툴
 
-# e2e tests
-$ npm run test:e2e
+#### Docker의 특징
 
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- 가벼운 가상화: 도커 컨테이너는 호스트 운영체제의 커널을 공유하고 애플리케이션 실행에 필요한 최소한의 파일만을 포함. 이를 통해 메모리와 CPU 자원을 적게 사용하면서 빠르게 실행할 수 있다.
+- 이식성: 도커 이미지를 사용하면 개발 환경, 테스트 환경, 배포 환경 등 서로 다른 환경에서 애플리케이션을 동일하게 실행이 가능하다. 이식성이 높아 어디서나 실행할 수 있다.
+- 독립성: 각 컨테이너는 독립된 환경을 제공하므로, 서로 다른 애플리케이션이 동일한 호스트에서 실행되어도 서로 간섭하지 않는다.
+- 이미지: 도커 컨테이너는 도커 이미지를 기반으로 생성됩니다. 이미지는 애플리케이션의 실행에 필요한 모든 것을 포함한 정적인 파일이며, 이 이미지를 기반으로 여러 개의 컨테이너를 만들어 낸다.
