@@ -1,5 +1,7 @@
 # Blog API와 Docker를 이용한 프로젝트
 
+- 배포 주소: http://52.78.138.193:3000/api-docs
+
 ## 주요 기능
 
 - **CRUD 기능**: 블로그 포스트에 대한 생성(Create), 읽기(Read), 수정(Update), 삭제(Delete) 기능 제공.
