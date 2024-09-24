@@ -29,22 +29,15 @@ jobs:
 
         # 도커 이미지
       - name: Build Docker image
-        run: docker build -t blog-api-app:latest .
+        run: docker build -t blog-api-app:latest -f deveops-project/Dockerfile
 
       - name: Setup SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > keypair.pem
           chmod 600 keypair.pem
 
-      - name: Check EC2 IP
-        run: echo "EC2_IP is set" # This won't show the actual IP but confirms it's being referenced
-
       - name: Deploy to EC2
         run: |
-          echo "Length of EC2_SSH_KEY: ${#EC2_IP}"
-        # Proceed with the deployment steps
-
-      - name: Deploy to EC2
-        run: |
-          scp -i keypair.pem -o StrictHostKeyChecking=no ./docker-image ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} "docker pull blog-api-app:latest || true"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} "docker stop $(docker ps -q --filter ancestor=blog-api-app:latest) || true"
           ssh -i keypair.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} "docker run -d -p 3000:3000 blog-api-app:latest"
