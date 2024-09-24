@@ -1,6 +1,5 @@
 name: CI/CD Pipeline
 
-# main 브랜치에 push 또는 PR을 하게 되면 CI/CD 실행
 on:
   push:
     branches:
@@ -29,12 +28,10 @@ jobs:
         run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest .
 
       - name: Docker Login
-        run: |
-          echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
 
       - name: Setup SSH key
         run: |
@@ -46,4 +43,5 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest || true"
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker stop \$(sudo docker ps -q --filter ancestor=${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest) || true"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker rm \$(sudo docker ps -aq --filter ancestor=${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest) || true"
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
