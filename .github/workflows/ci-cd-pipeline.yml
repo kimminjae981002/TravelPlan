@@ -27,6 +27,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Docker Login
+        run: |
+          echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
         # 도커 이미지
       - name: Build Docker image
         run: docker build -t blog-api-app:latest .
@@ -38,6 +42,7 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull blog-api-app:latest || true"
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker stop $(docker ps -q --filter ancestor=blog-api-app:latest) || true"
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 blog-api-app:latest"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull your_dockerhub_username/blog-api-app:latest || true"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker stop \$(sudo docker ps -q --filter ancestor=your_dockerhub_username/blog-api-app:latest) || true"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 your_dockerhub_username/blog-api-app:latest"
