@@ -44,8 +44,6 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest || true"
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           CONTAINER_ID=\$(sudo docker ps -q --filter ancestor=${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest);
-          if [ -n \"\$CONTAINER_ID\" ]; then
-            sudo docker stop \$CONTAINER_ID;
-            sudo docker rm \$CONTAINER_ID;
-          fi"
+          sudo docker stop sudo docker ps -q --filter 'publish=3000'
+          sudo docker rm sudo docker ps -q --filter 'publish=3000'
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 --env-file /home/ubuntu/Blog-API/.env  ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
