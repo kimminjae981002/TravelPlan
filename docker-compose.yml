@@ -3,6 +3,7 @@ services:
   app:
     build:
       context: ./
+    image: minjae981002/blog-api-app:latest
     ports:
       - '3000:3000'
     env_file: # 수정된 부분
