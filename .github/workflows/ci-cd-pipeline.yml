@@ -37,5 +37,5 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          scp -i key.pem -o StrictHostKeyChecking=no ./docker-image ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user
-          ssh -i key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} "docker run -d -p 3000:3000 blog-api-app:latest"
+          scp -i key.pem -o StrictHostKeyChecking=no ./docker-image ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "docker run -d -p 3000:3000 blog-api-app:latest"
