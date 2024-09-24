@@ -42,6 +42,10 @@ jobs:
         run: |
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest || true"
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker stop \$(sudo docker ps -q --filter ancestor=${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest) || true"
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker rm \$(sudo docker ps -aq --filter ancestor=${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest) || true"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+          CONTAINER_ID=\$(sudo docker ps -q --filter ancestor=${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest);
+          if [ -n \"\$CONTAINER_ID\" ]; then
+          sudo docker stop \$CONTAINER_ID;
+          sudo docker rm \$CONTAINER_ID;
+          fi"
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
