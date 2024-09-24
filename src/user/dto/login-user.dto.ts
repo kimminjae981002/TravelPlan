@@ -10,7 +10,7 @@ export class LoginUserDto {
   @ApiProperty({
     description: '유저 ID',
     required: true,
-    example: 'ididid',
+    example: 'testid',
   })
   @MinLength(4)
   @MaxLength(20)
