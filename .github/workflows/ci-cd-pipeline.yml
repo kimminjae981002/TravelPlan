@@ -48,4 +48,4 @@ jobs:
             sudo docker stop \$CONTAINER_ID;
             sudo docker rm \$CONTAINER_ID;
           fi"
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 --env-file .env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 --env-file /home/ubuntu/Blog-API/.env  ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"

@@ -3,6 +3,7 @@ services:
   app:
     build:
       context: ./
+      dockerfile: Dockerfile
     image: minjae981002/blog-api-app:latest
     ports:
       - '3000:3000'
