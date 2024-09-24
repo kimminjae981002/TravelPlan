@@ -20,6 +20,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+        # Node.js 환경 설정
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x' # 사용할 Node.js 버전
+
       # 프로젝트 의존성 설치
       - name: Install dependencies
         run: npm install
