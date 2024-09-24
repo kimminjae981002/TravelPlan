@@ -1,5 +1,6 @@
 name: CI/CD Pipeline
 
+# main 브랜치에 push or pr을 하게 되면 CI/CD 실행
 on:
   push:
     branches:
@@ -16,14 +17,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+        # 노드 버전
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
+          # npm 다운
       - name: Install dependencies
         run: npm install
 
+        # 도커 이미지
       - name: Build Docker image
         run: docker build -t blog-api-app:latest .
 
@@ -34,5 +38,5 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          scp -i key.pem -o StrictHostKeyChecking=no ./docker-image ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "docker run -d -p 3000:3000 blog-api-app:latest"
+          scp -i key.pem -o StrictHostKeyChecking=no ./docker-image ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user
+          ssh -i key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} "docker run -d -p 3000:3000 blog-api-app:latest"
