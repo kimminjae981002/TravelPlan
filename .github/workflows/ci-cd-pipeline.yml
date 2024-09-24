@@ -1,54 +1,41 @@
 name: CI/CD Pipeline
 
-# 언제 파이프라인을 실행할지 정의
 on:
   push:
     branches:
-      - main # main 브랜치에 푸시될 때 실행
+      - main
   pull_request:
     branches:
-      - main # main 브랜치로 PR 시에도 실행
+      - main
 
-# 사용할 Job들 정의
 jobs:
   build:
-    runs-on: ubuntu-latest # GitHub에서 제공하는 가상 머신 사용
+    runs-on: ubuntu-latest
 
-    # 다양한 스텝 정의
     steps:
-      # 리포지토리를 체크아웃 (코드를 가져옴)
       - name: Checkout repository
         uses: actions/checkout@v3
 
-        # Node.js 환경 설정
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x' # 사용할 Node.js 버전
+          node-version: '20.x'
 
-      # 프로젝트 의존성 설치
       - name: Install dependencies
         run: npm install
 
-      # 테스트 실행
       - name: Run tests
         run: npm test
 
-      # Docker 이미지 빌드
       - name: Build Docker image
         run: docker build -t blog-api-app:latest .
-
-      # Docker 컨테이너 실행 (테스트용)
-      - name: Run Docker container
-        run: docker run -d -p 3000:3000 blog-api-app:latest
 
       - name: Setup SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
-          chmod 600 key.pem  # SSH 키의 권한 설정
+          chmod 600 key.pem
 
-        # AWS EC2
       - name: Deploy to EC2
         run: |
           scp -i key.pem -o StrictHostKeyChecking=no ./docker-image ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user
-          ssh -i key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} "docker-compose up -d"
+          ssh -i key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} "docker run -d -p 3000:3000 blog-api-app:latest"
