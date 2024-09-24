@@ -38,6 +38,6 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "docker pull blog-api-app:latest || true"
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "docker stop $(docker ps -q --filter ancestor=blog-api-app:latest) || true"
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "docker run -d -p 3000:3000 blog-api-app:latest"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull blog-api-app:latest || true"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker stop $(docker ps -q --filter ancestor=blog-api-app:latest) || true"
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 blog-api-app:latest"
