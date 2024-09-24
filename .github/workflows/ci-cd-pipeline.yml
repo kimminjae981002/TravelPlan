@@ -1,6 +1,6 @@
 name: CI/CD Pipeline
 
-# main 브랜치에 push or pr을 하게 되면 CI/CD 실행
+# main 브랜치에 push 또는 PR을 하게 되면 CI/CD 실행
 on:
   push:
     branches:
@@ -17,29 +17,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-        # 노드 버전
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-          # npm 다운
       - name: Install dependencies
         run: npm install
 
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest .
+
       - name: Docker Login
         run: |
-          echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
-
-      - name: 도커 이미지에 푸시
-        run: |
           echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
-          docker tag blog-api-app:latest ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
 
-        # 도커 이미지
-      - name: Build Docker image
-        run: docker build -t blog-api-app:latest .
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
 
       - name: Setup SSH key
         run: |
