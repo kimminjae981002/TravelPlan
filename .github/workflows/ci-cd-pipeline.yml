@@ -41,7 +41,7 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          echo "${{ secrets.EC2_IP || 'default_ip' }}" # Replace 'default_ip' with a placeholder
+          echo "Length of EC2_SSH_KEY: ${#EC2_IP}"
         # Proceed with the deployment steps
 
       - name: Deploy to EC2
