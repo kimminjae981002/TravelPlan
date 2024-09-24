@@ -10,7 +10,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: '유저 ID',
     required: true,
-    example: 'ididid1',
+    example: 'ididid',
   })
   @IsNotEmpty({ message: 'ID를 작성해주세요.' })
   @MinLength(4, { message: '아이디는 4글자 이상 20글자 이하로 해주세요.' })
