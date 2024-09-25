@@ -18,18 +18,13 @@ const Signup = ({ show, handleClose }) => {
   const [name, setName] = useState('');
 
   const handleSignup = async () => {
-    if (password !== passwordCheck) {
-      alert('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-
     const userData = {
       userId: userId.trim(),
       password: password.trim(),
       passwordCheck: passwordCheck.trim(),
       name: name.trim(),
     };
-    console.log(userData);
+
     try {
       const response = await fetch('http://52.78.138.193:3000/user/signup', {
         method: 'POST',
@@ -44,9 +39,11 @@ const Signup = ({ show, handleClose }) => {
         alert('회원가입 성공!');
         handleClose(); // 모달 닫기
       } else {
-        const errorText = await response.text(); // 오류 메시지
-        console.error('Error response:', errorText);
-        alert('회원가입 실패: ' + errorText);
+        const errorText = await response.text();
+        const errorResponse = JSON.parse(errorText);
+        const messages = errorResponse.message;
+        console.error('Error response:', messages);
+        alert('회원가입 실패: ' + messages);
       }
     } catch (error) {
       console.error('Error:', error);
