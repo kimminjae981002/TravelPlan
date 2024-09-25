@@ -111,6 +111,7 @@ export class BoardService {
         .tz('Asia/Seoul')
         .format('YYYY-MM-DD HH:mm:ss'),
       image: board.image,
+      userId: board.userId,
     };
   }
 
