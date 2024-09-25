@@ -54,12 +54,12 @@ export class BoardController {
       });
     }
 
+    let imagePath = null;
     if (file) {
-      console.log(file);
-      createBoardDto.image = file.filename; // 파일 이름 저장
+      imagePath = file.path; // 이미지 저장 경로 (저장 방법에 따라 조정 필요)
     }
 
-    await this.boardService.create(createBoardDto, user.name);
+    await this.boardService.create(createBoardDto, user.name, imagePath);
     return { success: true, message: 'okay' };
   }
 

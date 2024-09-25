@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Param } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  Param,
+  UploadedFile,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './board.entity';
 import { Repository } from 'typeorm';
@@ -14,7 +19,7 @@ export class BoardService {
     private readonly boardRepository: Repository<Board>,
   ) {}
 
-  async create(createBoardDto: CreateBoardDto, name: string) {
+  async create(createBoardDto: CreateBoardDto, name: string, image?: string) {
     const { title, content } = createBoardDto;
     const createdAt = new Date().toLocaleString('en-US', {
       timeZone: 'Asia/Seoul',
@@ -25,6 +30,7 @@ export class BoardService {
       content,
       createdAt,
       userName: name,
+      image,
     });
 
     await this.boardRepository.save(newBoard);
@@ -38,6 +44,7 @@ export class BoardService {
         'b.title',
         'b.content',
         'b.userName',
+        'b.image',
         'b.createdAt',
         'b.updatedAt',
       ])
@@ -58,6 +65,7 @@ export class BoardService {
         updatedAt: moment(board.updatedAt)
           .tz('Asia/Seoul')
           .format('YYYY-MM-DD HH:mm:ss'),
+        image: board.image,
       })),
 
       totalCount,
@@ -67,7 +75,14 @@ export class BoardService {
   async findOne(@Param('boardId') boardId: number) {
     const board = await this.boardRepository
       .createQueryBuilder('b')
-      .select(['b.id', 'b.title', 'b.content', 'b.userName', 'b.createdAt'])
+      .select([
+        'b.id',
+        'b.title',
+        'b.content',
+        'b.userName',
+        'b.createdAt',
+        'b.image',
+      ])
       .where('b.id = :boardId', { boardId })
       .getOne();
 
@@ -86,6 +101,7 @@ export class BoardService {
       updatedAt: moment(board.updatedAt)
         .tz('Asia/Seoul')
         .format('YYYY-MM-DD HH:mm:ss'),
+      image: board.image,
     };
   }
 
@@ -103,6 +119,7 @@ export class BoardService {
 
     board.title = updateBoardDto.title || board.title;
     board.content = updateBoardDto.content || board.content;
+    board.image = updateBoardDto.image || board.image;
 
     return this.boardRepository.save(board);
   }
