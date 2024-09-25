@@ -16,7 +16,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
-    console.log(formData);
+
     if (image) {
       formData.append('image', image);
     }

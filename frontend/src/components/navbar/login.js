@@ -33,7 +33,6 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         alert('로그인 성공');
         onLoginSuccess({ accessToken: data.accessToken });
         handleClose(); // 모달 닫기
