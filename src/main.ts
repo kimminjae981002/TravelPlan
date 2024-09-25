@@ -5,14 +5,21 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser'; //
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   const configService = app.get(ConfigService);
   const PORT = configService.get<number>('SERVER_PORT');
 
   app.use(cookieParser());
+
+  // 정적 파일 제공
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads/',
+  });
 
   // cors 설정
   const corsOptions: CorsOptions = {

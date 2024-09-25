@@ -1,24 +1,22 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-
+import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { typeOrmModuleAsyncOptions } from './configs/database.config';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { configModuleValidationSchema } from './configs/env-validation.config';
 import { BoardModule } from './board/board.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { join } from 'path';
+
 @Module({
   imports: [
     MulterModule.register({
-      dest: './uploads', // 업로드할 경로
+      // 저장 경로를 절대 경로로 설정
+      dest: join(__dirname, '..', 'uploads'),
     }),
-    // 환경변수 로딩
     ConfigModule.forRoot({
       isGlobal: true,
-      validationSchema: configModuleValidationSchema,
     }),
-    // typeorm 설정
     TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions),
     AuthModule,
     UserModule,

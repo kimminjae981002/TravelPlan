@@ -55,7 +55,7 @@ export class BoardController {
 
     let imagePath = null;
     if (file) {
-      imagePath = file.path; // 이미지 저장 경로 (저장 방법에 따라 조정 필요)
+      imagePath = file.path;
     }
 
     await this.boardService.create(createBoardDto, user.name, imagePath);
