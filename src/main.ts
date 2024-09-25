@@ -16,11 +16,17 @@ async function bootstrap() {
 
   // cors 설정
   const corsOptions: CorsOptions = {
-    origin: '*',
+    origin: 'http://localhost:3000',
     credentials: true,
     exposedHeaders: ['Authorization', 'Content-Type'],
     methods: 'GET, POST, PUT, DELETE, OPTIONS',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+    allowedHeaders: [
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+      'Authorization', // Authorization을 배열의 요소로 추가
+    ],
   };
 
   app.enableCors(corsOptions);

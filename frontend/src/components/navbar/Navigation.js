@@ -5,11 +5,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useState, useEffect } from 'react';
 import Signup from './signup';
 import Login from './login';
+import Board from '../Board/board';
 
 const Navigation = () => {
   const [showModal, setShowModal] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showBoardCreate, setShowBoardCreate] = useState(false); // 추가
   const [accessToken, setAccessToken] = useState('');
 
   useEffect(() => {
@@ -25,6 +27,8 @@ const Navigation = () => {
 
   const handleCloseLogin = () => setShowLogin(false);
   const handleShowLogin = () => setShowLogin(true);
+
+  const handleShowBoardCreate = () => setShowBoardCreate(true);
 
   const handleLoginSuccess = (tokens) => {
     setAccessToken(tokens.accessToken); // access token 저장
@@ -53,7 +57,12 @@ const Navigation = () => {
             <Nav className="me-auto"></Nav>
             <Nav>
               {isLoggedIn ? (
-                <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
+                <>
+                  <Nav.Link onClick={handleShowBoardCreate}>
+                    게시글 작성
+                  </Nav.Link>
+                  <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
+                </>
               ) : (
                 <>
                   <Nav.Link onClick={handleShow}>회원가입</Nav.Link>
@@ -64,7 +73,6 @@ const Navigation = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-
       <Signup show={showModal} handleClose={handleClose} />
       <Login
         show={showLogin}
@@ -72,6 +80,12 @@ const Navigation = () => {
         onLoginSuccess={handleLoginSuccess}
         accessToken={accessToken}
       />
+      <Board
+        show={showBoardCreate}
+        handleClose={() => setShowBoardCreate(false)}
+        accessToken={accessToken}
+      />{' '}
+      {/* 추가 */}
     </>
   );
 };
