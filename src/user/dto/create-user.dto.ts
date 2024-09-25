@@ -4,6 +4,7 @@ import {
   MinLength,
   IsNotEmpty,
   IsStrongPassword,
+  Length,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -22,12 +23,8 @@ export class CreateUserDto {
     required: true,
     example: 'abc123456',
   })
-  @IsStrongPassword(
-    { minLength: 8 },
-    { message: '비밀번호는 8자리 이상입니다.' },
-  )
+  @Length(8, 20, { message: '비밀번호는 최소 8자리 이상이어야 합니다.' })
   @IsNotEmpty({ message: '비밀번호를 작성해주세요.' })
-  @MaxLength(20)
   password: string;
 
   @ApiProperty({
@@ -35,10 +32,7 @@ export class CreateUserDto {
     required: true,
     example: 'abc123456',
   })
-  @IsStrongPassword(
-    { minLength: 8 },
-    { message: '비밀번호는 8자리 이상입니다.' },
-  )
+  @Length(8, 20, { message: '비밀번호는 최소 8자리 이상이어야 합니다.' })
   @IsNotEmpty({ message: '비밀번호를 작성해주세요.' })
   passwordCheck: string;
 
