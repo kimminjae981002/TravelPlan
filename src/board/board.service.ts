@@ -51,6 +51,7 @@ export class BoardService {
         'b.content',
         'b.userName',
         'b.image',
+        'b.userId',
         'b.createdAt',
         'b.updatedAt',
       ])
@@ -86,8 +87,10 @@ export class BoardService {
         'b.title',
         'b.content',
         'b.userName',
-        'b.createdAt',
         'b.image',
+        'b.userId',
+        'b.createdAt',
+        'b.updatedAt',
       ])
       .where('b.id = :boardId', { boardId })
       .getOne();

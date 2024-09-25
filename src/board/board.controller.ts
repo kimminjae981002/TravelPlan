@@ -79,6 +79,7 @@ export class BoardController {
       imagePath,
       user.id,
     );
+
     return { success: true, message: 'okay' };
   }
 

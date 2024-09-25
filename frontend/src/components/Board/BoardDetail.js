@@ -34,6 +34,7 @@ const BoardDetail = () => {
         }
 
         const data = await response.json();
+        console.log(data, 'data');
         setBoard(data);
       } catch (error) {
         setError(error.message);
@@ -60,7 +61,7 @@ const BoardDetail = () => {
     // 삭제 로직
     console.log('Delete post');
   };
-  console.log(board, currentUserId);
+  console.log(board, '...', currentUserId);
   return (
     <Container>
       {board.image && (

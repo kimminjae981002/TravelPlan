@@ -60,7 +60,7 @@ const Signup = ({ show, handleClose }) => {
               type="text"
               placeholder="아이디 입력"
               value={username}
-              onChange={(e) => username(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </Form.Group>
 

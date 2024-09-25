@@ -14,6 +14,7 @@ export const Container = styled.div`
 
 export const BoardCard = styled.div`
   width: calc(30.33% - 100px); /* 3개씩 나열하기 위해 여백 고려 */
+  height: calc(60.33% - 100px); /* 너비와 같은 높이 설정 */
   margin: 20px;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
