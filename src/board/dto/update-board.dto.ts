@@ -30,4 +30,13 @@ export class UpdateBoardDto {
   @IsOptional()
   @IsString()
   content?: string;
+
+  @ApiProperty({
+    description: '블로그 이미지',
+    required: false, // 선택 사항으로 설정
+    type: 'string',
+    format: 'binary', // 이미지 업로드 형식
+  })
+  @IsOptional() // 선택적 필드
+  image?: string; // 이미지 필드
 }

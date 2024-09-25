@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, MaxLength, MinLength } from 'class-validator';
 
 export class CreateBoardDto {
   @ApiProperty({
@@ -20,4 +20,13 @@ export class CreateBoardDto {
   @MinLength(10, { message: '내용은 10글자 이상으로 해주세요.' })
   @MaxLength(1000, { message: '내용은 1000글자 이하로 해주세요.' })
   content: string;
+
+  @ApiProperty({
+    description: '블로그 이미지',
+    required: false, // 선택 사항으로 설정
+    type: 'string',
+    format: 'binary', // 이미지 업로드 형식
+  })
+  @IsOptional() // 선택적 필드
+  image?: string; // 이미지 필드
 }

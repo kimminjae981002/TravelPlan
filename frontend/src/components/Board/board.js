@@ -16,6 +16,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
+    console.log(formData);
     if (image) {
       formData.append('image', image);
     }
@@ -35,7 +36,10 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
         handleClose(); // 모달 닫기
       } else {
         const errorText = await response.text();
-        alert('게시글 작성 실패: ' + errorText);
+        const errorResponse = JSON.parse(errorText);
+        const messages = errorResponse.message;
+        console.error('Error response:', messages);
+        alert('게시글 작성 실패: ' + messages);
       }
     } catch (error) {
       console.error('Error:', error);

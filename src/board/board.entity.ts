@@ -22,6 +22,9 @@ export class Board {
   @Column({ length: 50 })
   userName: string;
 
+  @Column({ type: 'varchar', nullable: true }) // 이미지 필드는 선택적
+  image?: string;
+
   @CreateDateColumn({ type: 'timestamp' }) // 생성됐을 때의 시간
   createdAt: Date;
 

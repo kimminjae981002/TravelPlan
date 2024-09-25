@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -20,6 +21,7 @@ import { User } from '../user/user.entity';
 import { PaginateBoardDto } from '../common/dto/paginate.dto';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Boards')
 @Controller('board')
@@ -28,15 +30,21 @@ export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
   /**
-   * 리뷰 작성
+   * 게시글 작성
    * @param createBoardDto 제목, 내용
    * @param userId 유저아이디
    * @param name 닉네임
+   * @param file 이미지 파일
    * @returns
    */
   @Post()
+  @UseInterceptors(FileInterceptor('image')) // 이미지 업로드 처리
   @UseGuards(JwtAuthGuard)
-  async create(@UserInfo() user: User, @Body() createBoardDto: CreateBoardDto) {
+  async create(
+    @UserInfo() user: User,
+    @Body() createBoardDto: CreateBoardDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     const { title } = createBoardDto;
 
     if (title.trim() === '') {
@@ -44,6 +52,11 @@ export class BoardController {
         success: false,
         message: '공백만 사용할 수는 없습니다',
       });
+    }
+
+    if (file) {
+      console.log(file);
+      createBoardDto.image = file.filename; // 파일 이름 저장
     }
 
     await this.boardService.create(createBoardDto, user.name);
