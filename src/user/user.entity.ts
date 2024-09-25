@@ -21,7 +21,7 @@ export class User {
 
   @ApiProperty({ description: '유저아이디', example: 'admin' })
   @Column({ type: 'varchar', nullable: false, unique: true })
-  userId: string;
+  username: string;
 
   @ApiProperty({ description: '유저비밀번호', example: 'password' })
   @Column({ type: 'varchar', nullable: false }) // {select: false} select로 가져올 수 없음
