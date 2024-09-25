@@ -1,12 +1,13 @@
 import React from 'react';
 import { Header } from '../components/Styles/Header/Header.style';
-import { Container } from '../components/Styles/Container/Container.style';
+import BoardContainer from '../components/Container/Container';
 
-const HomePage = () => {
+const HomePage = ({ isLoggedIn }) => {
+  // 로그인 상태를 prop으로 받음
   return (
     <>
-      <Header></Header>
-      <Container></Container>
+      <Header />
+      <BoardContainer isLoggedIn={isLoggedIn} /> {/* 로그인 상태 전달 */}
     </>
   );
 };
