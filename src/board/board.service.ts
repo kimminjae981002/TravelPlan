@@ -19,7 +19,12 @@ export class BoardService {
     private readonly boardRepository: Repository<Board>,
   ) {}
 
-  async create(createBoardDto: CreateBoardDto, name: string, image?: string) {
+  async create(
+    createBoardDto: CreateBoardDto,
+    name: string,
+    image?: string,
+    userId?: number,
+  ) {
     const { title, content } = createBoardDto;
     const createdAt = new Date().toLocaleString('en-US', {
       timeZone: 'Asia/Seoul',
@@ -31,6 +36,7 @@ export class BoardService {
       createdAt,
       userName: name,
       image,
+      user: { id: userId },
     });
 
     await this.boardRepository.save(newBoard);

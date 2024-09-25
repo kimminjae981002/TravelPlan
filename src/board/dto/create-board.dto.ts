@@ -29,4 +29,6 @@ export class CreateBoardDto {
   })
   @IsOptional() // 선택적 필드
   image?: string; // 이미지 필드
+
+  userId: number; // 작성자 ID 필드 추가
 }

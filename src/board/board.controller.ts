@@ -73,7 +73,12 @@ export class BoardController {
       imagePath = file.path;
     }
 
-    await this.boardService.create(createBoardDto, user.name, imagePath);
+    await this.boardService.create(
+      createBoardDto,
+      user.name,
+      imagePath,
+      user.id,
+    );
     return { success: true, message: 'okay' };
   }
 

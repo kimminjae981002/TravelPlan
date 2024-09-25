@@ -34,6 +34,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
       if (response.ok) {
         alert('게시글이 작성되었습니다!');
         handleClose(); // 모달 닫기
+        window.location.reload();
       } else {
         const errorText = await response.text();
         const errorResponse = JSON.parse(errorText);

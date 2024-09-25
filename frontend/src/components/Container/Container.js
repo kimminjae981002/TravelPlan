@@ -5,10 +5,18 @@ import {
   BoardImage,
   BoardTitle,
   BoardAuthor,
+  BoardDescription,
 } from './Container.style';
+import { useNavigate } from 'react-router-dom';
 
 const BoardContainer = () => {
   const [boards, setBoards] = useState([]);
+
+  const navigate = useNavigate();
+
+  const handleCardClick = (id) => {
+    navigate(`/board/${id}`); // 상대 경로로 수정
+  };
 
   useEffect(() => {
     const fetchBoards = async () => {
@@ -22,7 +30,7 @@ const BoardContainer = () => {
         }
 
         const data = await response.json();
-        console.log('Fetched data:', data);
+
         setBoards(data.boards); // 데이터 구조에 따라 수정 필요
       } catch (error) {
         console.error('Error fetching posts:', error);
@@ -32,23 +40,39 @@ const BoardContainer = () => {
 
     fetchBoards();
   }, []);
-  console.log(boards);
+
   return (
     <Container>
       {boards.length > 0 ? (
         boards.map((board) => (
-          <BoardCard key={board.id}>
+          <BoardCard key={board.id} onClick={() => handleCardClick(board.id)}>
             {board.image && (
               <BoardImage
-                src={`http://52.78.138.193:3000/uploads/${board.image}`}
+                src={`http://52.78.138.193:3000/uploads/${board.image.split('/').pop()}`} // 이미지 URL 설정
+                alt={board.title}
               />
             )}
             <BoardTitle>{board.title}</BoardTitle>
-            <BoardAuthor>{board.userName}</BoardAuthor>
+            <BoardDescription>{board.content}</BoardDescription>
+            <BoardAuthor>
+              <span>{board.userName}</span>
+              <span>
+                {new Date(
+                  new Date(board.createdAt).getTime() - 9 * 60 * 60 * 1000,
+                ).toLocaleString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                })}
+              </span>
+            </BoardAuthor>
           </BoardCard>
         ))
       ) : (
-        <p>게시글이 없습니다.</p> // 게시글이 없을 때 메시지
+        <p>게시글이 없습니다.</p>
       )}
     </Container>
   );

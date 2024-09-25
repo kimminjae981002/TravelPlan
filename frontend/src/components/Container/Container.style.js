@@ -5,48 +5,61 @@ export const Container = styled.div`
   height: 100vh;
   margin-top: 300px;
   background-color: white;
-  color: black; /* text color 변경 */
+  color: black;
   display: flex;
-  flex-wrap: wrap; /* wrap을 사용하여 줄 바꿈 */
-  justify-content: center; /* 중앙 정렬 */
-  padding: 20px; /* 컨테이너 내 여백 추가 */
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
 `;
 
 export const BoardCard = styled.div`
-  width: calc(33.33% - 40px); /* 3개씩 나열하기 위해 여백 고려 */
-  margin: 20px; /* 카드 간격을 늘리기 위한 여백 */
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  width: calc(30.33% - 100px); /* 3개씩 나열하기 위해 여백 고려 */
+  margin: 20px;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  aspect-ratio: 1; /* 정사각형 비율 설정 */
+
+  /* 반응형 디자인 */
+  @media (max-width: 768px) {
+    width: calc(50% - 40px);
+  }
+
+  @media (max-width: 480px) {
+    width: calc(100% - 40px);
+  }
 `;
 
 export const BoardImage = styled.img`
   width: 100%;
-  height: auto;
+  height: 70%;
   border-radius: 8px;
 `;
 
 export const BoardTitle = styled.h3`
-  font-size: 1.5em; /* 제목 크기 증가 */
-  font-weight: bold; /* 제목 굵게 */
+  font-size: 1.5em;
+  font-weight: bold;
   color: #333;
-  margin: 10px 0; /* 상하 여백 추가 */
+  margin: 15px 0;
+  text-align: left;
 `;
 
 export const BoardDescription = styled.p`
-  font-size: 1em; /* 내용 크기 */
-  color: #555;
-  overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+  font-size: 1em;
+  color: #777;
+  overflow: hidden;
   display: -webkit-box;
+  text-align: left;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* 2줄로 제한 */
+  -webkit-line-clamp: 2;
 `;
 
 export const BoardAuthor = styled.p`
   color: #777;
-  margin-top: auto; /* 하단 정렬을 위한 마진 */
+  margin-top: auto;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
 `;
