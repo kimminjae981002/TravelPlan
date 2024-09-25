@@ -36,8 +36,8 @@ export class CreateUserDto {
     example: 'abc123456',
   })
   @IsStrongPassword(
-    { minLength: 8, minNumbers: 1, minSymbols: 1, minUppercase: 0 },
-    { message: '비밀번호는 특수문자/알파벳/숫자를 포함해야 합니다.' },
+    { minLength: 8 },
+    { message: '비밀번호는 8자리 이상입니다.' },
   )
   @IsNotEmpty({ message: '비밀번호를 작성해주세요.' })
   passwordCheck: string;
