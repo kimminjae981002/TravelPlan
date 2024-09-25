@@ -26,18 +26,23 @@ const BoardContainer = () => {
         setBoards(data.boards); // 데이터 구조에 따라 수정 필요
       } catch (error) {
         console.error('Error fetching posts:', error);
+        setBoards([]);
       }
     };
 
     fetchBoards();
   }, []);
-
+  console.log(boards);
   return (
     <Container>
       {boards.length > 0 ? (
         boards.map((board) => (
           <BoardCard key={board.id}>
-            {board.image && <BoardImage src={board.image} alt={board.title} />}
+            {board.image && (
+              <BoardImage
+                src={`http://52.78.138.193:3000/uploads/${board.image}`}
+              />
+            )}
             <BoardTitle>{board.title}</BoardTitle>
             <BoardAuthor>{board.userName}</BoardAuthor>
           </BoardCard>

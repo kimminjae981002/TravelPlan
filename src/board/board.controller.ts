@@ -22,6 +22,8 @@ import { PaginateBoardDto } from '../common/dto/paginate.dto';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { join } from 'path';
 
 @ApiTags('Boards')
 @Controller('board')
@@ -37,7 +39,19 @@ export class BoardController {
    * @returns
    */
   @Post()
-  @UseInterceptors(FileInterceptor('image'), AuthInterceptor) // 이미지 업로드 처리
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: (req, file, cb) => {
+          cb(null, join(__dirname, '..', '..', 'uploads')); // uploads 폴더 경로
+        },
+        filename: (req, file, cb) => {
+          cb(null, file.originalname); // 파일 이름을 원래 이름으로 설정
+        },
+      }),
+    }),
+    AuthInterceptor,
+  ) // 이미지 업로드 처리
   @UseGuards(JwtAuthGuard)
   async create(
     @UserInfo() user: User,

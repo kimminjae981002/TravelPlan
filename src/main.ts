@@ -32,7 +32,7 @@ async function bootstrap() {
       'X-Requested-With',
       'Content-Type',
       'Accept',
-      'Authorization', // Authorization을 배열의 요소로 추가
+      'Authorization',
     ],
   };
 
