@@ -33,4 +33,7 @@ export class Board {
 
   @ManyToOne(() => User, (user) => user.boards)
   user: User;
+
+  @Column()
+  userId: number;
 }

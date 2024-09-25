@@ -15,15 +15,13 @@ const BoardDetail = () => {
   const [board, setBoard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userInfo, setUserInfo] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      console.log(decodedToken);
-      setUserInfo(decodedToken);
-    }
+
+    const decodedToken = jwtDecode(token);
+    setCurrentUserId(decodedToken.id);
   }, []);
 
   useEffect(() => {
@@ -53,8 +51,6 @@ const BoardDetail = () => {
 
   if (!board) return <p>게시글을 찾을 수 없습니다.</p>;
 
-  //   const isAuthor = board.userName === currentUserName;
-
   const handleEdit = () => {
     // 수정 로직
     console.log('Edit post');
@@ -64,7 +60,7 @@ const BoardDetail = () => {
     // 삭제 로직
     console.log('Delete post');
   };
-
+  console.log(board, currentUserId);
   return (
     <Container>
       {board.image && (
@@ -77,12 +73,12 @@ const BoardDetail = () => {
       <Content>{board.content}</Content>
       <Author>
         작성자: {board.userName}
-        {/* {
+        {board.userId === currentUserId && (
           <div>
             <Button onClick={handleEdit}>수정</Button>
             <Button onClick={handleDelete}>삭제</Button>
           </div>
-        } */}
+        )}
       </Author>
     </Container>
   );
