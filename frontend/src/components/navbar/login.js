@@ -6,13 +6,13 @@ import Form from 'react-bootstrap/Form';
 import { CenteredModal } from '../Styles/Common/Common.style';
 
 const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
-  const [userId, setUserId] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   // 로그인 제출
   const handleLogin = async () => {
     const userData = {
-      userId: userId.trim(),
+      username: username.trim(),
       password: password.trim(),
     };
 
@@ -35,7 +35,7 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
         const errorResponse = JSON.parse(errorText);
         const messages = errorResponse.message;
         console.error('Error response:', messages);
-        if (!userId) {
+        if (!username) {
           alert(messages[0]);
         } else if (!password) {
           alert(messages[0]);
@@ -62,8 +62,8 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
             <Form.Control
               type="text"
               placeholder="아이디 입력"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </Form.Group>
 

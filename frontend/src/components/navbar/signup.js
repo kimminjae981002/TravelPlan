@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import { CenteredModal } from '../Styles/Common/Common.style';
 
 const Signup = ({ show, handleClose }) => {
-  const [userId, setUserId] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [name, setName] = useState('');
@@ -14,7 +14,7 @@ const Signup = ({ show, handleClose }) => {
   // 회원가입 제출
   const handleSignup = async () => {
     const userData = {
-      userId: userId.trim(),
+      username: username.trim(),
       password: password.trim(),
       passwordCheck: passwordCheck.trim(),
       name: name.trim(),
@@ -59,8 +59,8 @@ const Signup = ({ show, handleClose }) => {
             <Form.Control
               type="text"
               placeholder="아이디 입력"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
+              value={username}
+              onChange={(e) => username(e.target.value)}
             />
           </Form.Group>
 

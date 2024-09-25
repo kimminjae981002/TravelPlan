@@ -33,7 +33,7 @@ export class BoardController {
   /**
    * 게시글 작성
    * @param createBoardDto 제목, 내용
-   * @param userId 유저아이디
+   * @param username 유저아이디
    * @param name 닉네임
    * @param file 이미지 파일
    * @returns
