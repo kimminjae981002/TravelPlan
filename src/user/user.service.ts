@@ -22,14 +22,14 @@ export class UserService {
 
   // 회원가입
   async createUser(createUserDto: CreateUserDto) {
-    const { userId, password, name } = createUserDto;
+    const { username, password, name } = createUserDto;
 
     try {
       const hashRound = this.configService.get<number>('HASH_ROUNDS');
       const hashPassword = hashSync(password, hashRound);
 
       await this.userRepository.save({
-        userId,
+        username,
         password: hashPassword,
         name,
       });
@@ -76,8 +76,8 @@ export class UserService {
   }
 
   // 유저의 유저ID 찾기
-  async findUserByUserId(userId: string) {
-    return await this.userRepository.findOneBy({ userId });
+  async findUserByUserId(username: string) {
+    return await this.userRepository.findOneBy({ username });
   }
 
   // 유저의 유저 이름 찾기

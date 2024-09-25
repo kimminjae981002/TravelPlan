@@ -15,7 +15,7 @@ export class LoginUserDto {
   @MinLength(4)
   @MaxLength(20)
   @IsNotEmpty({ message: 'ID를 작성해주세요.' })
-  userId: string;
+  username: string;
 
   @ApiProperty({
     description: '비밀번호',

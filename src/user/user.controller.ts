@@ -29,11 +29,11 @@ export class UserController {
 
   @Post('signup')
   async create(@Body() createUserDto: CreateUserDto) {
-    const { userId, password, passwordCheck, name } = createUserDto;
+    const { username, password, passwordCheck, name } = createUserDto;
 
     const user = await this.userService.findUserByName(name);
 
-    const existingUser = await this.userService.findUserByUserId(userId);
+    const existingUser = await this.userService.findUserByUserId(username);
 
     // 이미 존재하는 사용자 처리
     if (existingUser) {
@@ -70,15 +70,15 @@ export class UserController {
    */
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
-    const { userId, password } = loginUserDto;
+    const { username, password } = loginUserDto;
 
-    const user = await this.userService.findUserByUserId(userId);
+    const user = await this.userService.findUserByUserId(username);
 
     if (!user)
       throw new UnauthorizedException('아이디 또는 비밀번호가 틀렸습니다.');
 
     const { accessToken, refreshToken } = await this.userService.login(
-      userId,
+      username,
       password,
     );
 
