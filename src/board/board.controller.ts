@@ -25,7 +25,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Boards')
 @Controller('board')
-@UseInterceptors(AuthInterceptor)
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
@@ -38,7 +37,7 @@ export class BoardController {
    * @returns
    */
   @Post()
-  @UseInterceptors(FileInterceptor('image')) // 이미지 업로드 처리
+  @UseInterceptors(FileInterceptor('image'), AuthInterceptor) // 이미지 업로드 처리
   @UseGuards(JwtAuthGuard)
   async create(
     @UserInfo() user: User,
@@ -64,7 +63,6 @@ export class BoardController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async findAll(@Query() query: PaginateBoardDto) {
     const { boards } = await this.boardService.findAll(query);
 
@@ -76,12 +74,12 @@ export class BoardController {
   }
 
   @Get(':boardId')
-  @UseGuards(JwtAuthGuard)
   async findOne(@Param('boardId') boardId: number) {
     return await this.boardService.findOne(boardId);
   }
 
   @Patch(':boardId')
+  @UseInterceptors(FileInterceptor('image'), AuthInterceptor)
   async updateBoard(
     @Param('boardId') boardId: number,
     @Body() updateBoardDto: UpdateBoardDto,
@@ -99,6 +97,7 @@ export class BoardController {
   }
 
   @Delete(':boardId')
+  @UseInterceptors(FileInterceptor('image'), AuthInterceptor)
   @UseGuards(JwtAuthGuard)
   async deleteBoard(@Param('boardId') boardId: number) {
     await this.boardService.deleteBoard(boardId);
