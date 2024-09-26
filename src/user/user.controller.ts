@@ -5,21 +5,23 @@ import {
   ConflictException,
   Controller,
   Post,
+  Req,
   Res,
   UnauthorizedException,
-  UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { AuthInterceptor } from '../auth/auth.interceptor';
-
+import { AuthService } from '../auth/auth.service';
 @ApiTags('USER')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   /**
    * 회원가입
@@ -86,6 +88,7 @@ export class UserController {
       httpOnly: true,
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: 'strict',
     });
 
     return res.json({
@@ -93,5 +96,26 @@ export class UserController {
       message: 'okay',
       accessToken,
     });
+  }
+
+  /**
+   * 리프레쉬토큰
+   * @returns
+   */
+  @Post('refresh-token')
+  async refreshToken(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.cookies['jwt']; // HTTPOnly 쿠키에서 Refresh Token 가져오기
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('리프레시 토큰이 없습니다.');
+    }
+
+    try {
+      const newAccessToken =
+        await this.authService.refreshAccessToken(refreshToken);
+      return res.json({ accessToken: newAccessToken });
+    } catch (error) {
+      throw new UnauthorizedException('리프레시 토큰이 유효하지 않습니다.');
+    }
   }
 }

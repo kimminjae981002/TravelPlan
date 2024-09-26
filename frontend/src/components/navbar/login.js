@@ -23,6 +23,7 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
+        credentials: 'include',
       });
 
       if (response.ok) {

@@ -8,6 +8,7 @@ import { User } from './user.entity';
 import { AuthModule } from '../auth/auth.module';
 import { JwtStrategy } from '../auth/jwt.strategy';
 import { BoardModule } from '../board/board.module';
+import { AuthService } from '../auth/auth.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { BoardModule } from '../board/board.module';
     forwardRef(() => AuthModule),
     forwardRef(() => BoardModule),
   ],
-  providers: [UserService, JwtStrategy],
+  providers: [UserService, JwtStrategy, AuthService],
   controllers: [UserController],
   exports: [UserService, UserModule],
 })
