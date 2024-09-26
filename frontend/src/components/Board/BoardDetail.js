@@ -4,13 +4,14 @@ import {
   Container,
   Title,
   Content,
-  Author,
+  Footer,
   Image,
   Button,
+  Author,
 } from './BoardDetail.style';
 import { jwtDecode } from 'jwt-decode';
 
-const BoardDetail = () => {
+const BoardDetail = ({ setBoards }) => {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,7 @@ const BoardDetail = () => {
         }
 
         const data = await response.json();
-        console.log(data);
+
         setBoard(data);
       } catch (error) {
         setError(error.message);
@@ -52,14 +53,34 @@ const BoardDetail = () => {
 
   if (!board) return <p>게시글을 찾을 수 없습니다.</p>;
 
-  const handleEdit = () => {
-    // 수정 로직
-    console.log('Edit post');
-  };
+  const handleEdit = () => {};
 
-  const handleDelete = () => {
-    // 삭제 로직
-    console.log('Delete post');
+  const handleDelete = async () => {
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      try {
+        const response = await fetch(`http://52.78.138.193:3000/board/${id}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        });
+
+        if (response.ok) {
+          alert('게시글 삭제가 되었습니다.');
+          setBoards((prevBoards) =>
+            prevBoards.filter((board) => board.id !== id),
+          );
+          window.location.href = '/';
+        } else {
+          const errorText = await response.text();
+          console.error('삭제 실패:', errorText);
+          alert(`게시글 삭제에 실패했습니다: ${errorText}`);
+        }
+      } catch (error) {
+        console.error('삭제 중 오류 발생:', error);
+        alert('게시글 삭제 중 오류가 발생했습니다.');
+      }
+    }
   };
 
   return (
@@ -72,15 +93,15 @@ const BoardDetail = () => {
       )}
       <Title>{board.title}</Title>
       <Content>{board.content}</Content>
-      <Author>
-        작성자: {board.userName}
+      <Footer>
         {board.userId === currentUserId && (
           <div>
             <Button onClick={handleEdit}>수정</Button>
             <Button onClick={handleDelete}>삭제</Button>
           </div>
         )}
-      </Author>
+        <Author> 작성자: {board.userName}</Author>
+      </Footer>
     </Container>
   );
 };

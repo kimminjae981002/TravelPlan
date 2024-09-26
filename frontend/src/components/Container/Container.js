@@ -15,7 +15,12 @@ const BoardContainer = () => {
   const navigate = useNavigate();
 
   const handleCardClick = (id) => {
-    navigate(`/board/${id}`); // 상대 경로로 수정
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return; // 클릭 이벤트 취소
+    }
+    navigate(`/board/${id}`);
   };
 
   useEffect(() => {

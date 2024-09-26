@@ -31,11 +31,14 @@ export const Content = styled.p`
   color: #555; /* 내용 색상 */
 `;
 
-export const Author = styled.p`
+export const Footer = styled.div`
+  /* p에서 div로 변경 */
   font-size: 0.9em; /* 작성자 폰트 크기 */
   color: #777; /* 흐린 색상 */
   margin-top: 10px; /* 위쪽 마진 */
   text-align: right; /* 오른쪽 정렬 */
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const Button = styled.button`
@@ -50,4 +53,13 @@ export const Button = styled.button`
   &:hover {
     background-color: #0056b3;
   }
+
+  &:disabled {
+    background-color: #ccc; /* 비활성화 시 색상 */
+    cursor: not-allowed; /* 커서 변경 */
+  }
+`;
+
+export const Author = styled.span`
+  padding-top: 20px;
 `;

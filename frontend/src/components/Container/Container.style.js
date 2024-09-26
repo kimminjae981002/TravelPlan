@@ -25,11 +25,11 @@ export const BoardCard = styled.div`
 
   /* 반응형 디자인 */
   @media (max-width: 768px) {
-    width: calc(50% - 40px);
+    width: calc(45% - 40px); /* 2개씩 나열하기 위해 수정 */
   }
 
   @media (max-width: 480px) {
-    width: calc(100% - 40px);
+    width: calc(100% - 40px); /* 1개씩 나열하기 위해 수정 */
   }
 `;
 

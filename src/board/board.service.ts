@@ -142,7 +142,6 @@ export class BoardService {
     if (!board) {
       throw new NotFoundException(`${boardId} 게시글을 찾을 수 없습니다.`);
     }
-
-    return await this.boardRepository.delete(board);
+    return await this.boardRepository.delete(board.id);
   }
 }
