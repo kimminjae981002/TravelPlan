@@ -11,7 +11,6 @@ const Signup = ({ show, handleClose }) => {
   const [passwordCheck, setPasswordCheck] = useState('');
   const [name, setName] = useState('');
 
-  // 회원가입 제출
   const handleSignup = async () => {
     const userData = {
       username: username.trim(),
@@ -30,9 +29,8 @@ const Signup = ({ show, handleClose }) => {
       });
 
       if (response.ok) {
-        // 성공적으로 회원가입 완료
         alert('회원가입 성공!');
-        handleClose(); // 모달 닫기
+        handleClose();
       } else {
         const errorText = await response.text();
         const errorResponse = JSON.parse(errorText);

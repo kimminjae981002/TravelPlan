@@ -26,8 +26,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
         method: 'POST',
         body: formData,
         headers: {
-          // 필요시 헤더 설정
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // access token 추가
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       });
 
@@ -36,7 +35,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
           'http://52.78.138.193:3000/user/refresh-token',
           {
             method: 'POST',
-            credentials: 'include', // 쿠키를 포함하기 위해 필요
+            credentials: 'include',
           },
         );
 
@@ -44,10 +43,8 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
           const data = await refreshResponse.json();
           const accessToken = data.accessToken;
 
-          // 새 액세스 토큰을 로컬 스토리지에 저장
           localStorage.setItem('accessToken', accessToken);
 
-          // 새 토큰으로 다시 게시글 작성 요청
           response = await fetch('http://52.78.138.193:3000/board', {
             method: 'POST',
             body: formData,
@@ -65,7 +62,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
 
       if (response.ok) {
         alert('게시글이 작성되었습니다!');
-        handleClose(); // 모달 닫기
+        handleClose();
         window.location.href = '/';
       } else {
         const errorText = await response.text();

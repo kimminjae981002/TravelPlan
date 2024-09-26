@@ -43,11 +43,11 @@ export class BoardController {
     FileInterceptor('image', {
       storage: diskStorage({
         destination: (req, file, cb) => {
-          cb(null, join(__dirname, '..', '..', 'uploads')); // uploads 폴더 경로
+          cb(null, join(__dirname, '..', '..', 'uploads'));
         },
         filename: (req, file, cb) => {
           console.log(file);
-          cb(null, file.originalname); // 파일 이름을 원래 이름으로 설정
+          cb(null, file.originalname);
         },
       }),
     }),

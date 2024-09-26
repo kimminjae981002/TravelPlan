@@ -13,23 +13,22 @@ export const Container = styled.div`
 `;
 
 export const BoardCard = styled.div`
-  width: calc(30.33% - 100px); /* 3개씩 나열하기 위해 여백 고려 */
-  height: calc(60.33% - 100px); /* 너비와 같은 높이 설정 */
+  width: calc(30.33% - 100px);
+  height: calc(60.33% - 100px);
   margin: 20px;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  aspect-ratio: 1; /* 정사각형 비율 설정 */
+  aspect-ratio: 1;
 
-  /* 반응형 디자인 */
   @media (max-width: 768px) {
-    width: calc(45% - 40px); /* 2개씩 나열하기 위해 수정 */
+    width: calc(45% - 40px);
   }
 
   @media (max-width: 480px) {
-    width: calc(100% - 40px); /* 1개씩 나열하기 위해 수정 */
+    width: calc(100% - 40px);
   }
 `;
 

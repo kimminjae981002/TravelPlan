@@ -35,9 +35,8 @@ export class UserController {
 
     const user = await this.userService.findUserByName(name);
 
-    const existingUser = await this.userService.findUserByUserId(username);
+    const existingUser = await this.userService.findUserByUsername(username);
 
-    // 이미 존재하는 사용자 처리
     if (existingUser) {
       throw new ConflictException(
         '이미 해당 아이디로 등록된 사용자가 있습니다.',
@@ -74,7 +73,7 @@ export class UserController {
   async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
     const { username, password } = loginUserDto;
 
-    const user = await this.userService.findUserByUserId(username);
+    const user = await this.userService.findUserByUsername(username);
 
     if (!user)
       throw new UnauthorizedException('아이디 또는 비밀번호가 틀렸습니다.');
@@ -104,7 +103,7 @@ export class UserController {
    */
   @Post('refresh-token')
   async refreshToken(@Req() req: Request, @Res() res: Response) {
-    const refreshToken = req.cookies['jwt']; // HTTPOnly 쿠키에서 Refresh Token 가져오기
+    const refreshToken = req.cookies['jwt'];
 
     if (!refreshToken) {
       throw new UnauthorizedException('리프레시 토큰이 없습니다.');

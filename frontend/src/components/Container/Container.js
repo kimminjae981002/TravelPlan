@@ -18,7 +18,7 @@ const BoardContainer = () => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
       alert('로그인이 필요합니다.');
-      return; // 클릭 이벤트 취소
+      return;
     }
     navigate(`/board/${id}`);
   };
@@ -31,12 +31,12 @@ const BoardContainer = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Error fetching posts'); // 401 에러 처리
+          throw new Error('Error fetching posts');
         }
 
         const data = await response.json();
 
-        setBoards(data.boards); // 데이터 구조에 따라 수정 필요
+        setBoards(data.boards);
       } catch (error) {
         console.error('Error fetching posts:', error);
         setBoards([]);

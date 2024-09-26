@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
 const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
-  const [editImage, setEditImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentUserId, setCurrentUserId] = useState('');
@@ -35,21 +33,11 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
     fetchBoard();
   }, [boardId]);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setEditImage(file);
-    }
-  };
-
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('title', editTitle);
     formData.append('content', editContent);
-    if (editImage) {
-      formData.append('image', editImage);
-    }
 
     try {
       const response = await fetch(
@@ -65,12 +53,12 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
 
       if (response.ok) {
         alert('게시글 수정이 완료되었습니다.');
-        onUpdate(); // 부모 컴포넌트의 업데이트 함수 호출
-        handleClose(); // 모달 닫기
+        onUpdate();
+        handleClose();
       } else {
-        const errorText = await response.text();
-        console.error('수정 실패:', errorText);
-        alert(`게시글 수정에 실패했습니다: ${errorText}`);
+        const errorText = await response.json();
+        console.error('수정 실패:', errorText[0]);
+        alert(errorText.message);
       }
     } catch (error) {
       console.error('수정 중 오류 발생:', error);
@@ -111,14 +99,6 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
             />
           </Form.Group>
 
-          <Form.Group controlId="formEditImage">
-            <Form.Label>이미지 업로드</Form.Label>
-            <Form.Control
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </Form.Group>
           <div style={{ marginTop: '10px' }}>
             <Button variant="primary" type="submit">
               수정하기

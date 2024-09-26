@@ -31,10 +31,10 @@ const Navigation = () => {
   const handleShowBoardCreate = () => setShowBoardCreate(true);
 
   const handleLoginSuccess = (tokens) => {
-    setAccessToken(tokens.accessToken); // access token 저장
+    setAccessToken(tokens.accessToken);
     localStorage.setItem('accessToken', tokens.accessToken);
     setIsLoggedIn(true);
-    handleCloseLogin(); // 모달 닫기
+    handleCloseLogin();
   };
 
   const handleLogout = () => {
@@ -42,9 +42,7 @@ const Navigation = () => {
     setAccessToken('');
     setIsLoggedIn(false);
 
-    document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'; // 쿠키 삭제
-
-    // 로컬 스토리지에서 access token 삭제
+    document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
     localStorage.removeItem('accessToken');
     window.location.href = '/';
   };
@@ -86,7 +84,7 @@ const Navigation = () => {
         handleClose={() => setShowBoardCreate(false)}
         accessToken={accessToken}
       />{' '}
-      {/* 추가 */}
+      {}
     </>
   );
 };

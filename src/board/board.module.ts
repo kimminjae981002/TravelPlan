@@ -14,7 +14,7 @@ import { v4 as uuid4 } from 'uuid';
   imports: [
     MulterModule.register({
       storage: diskStorage({
-        destination: './uploads', // 업로드된 파일을 저장할 디렉토리
+        destination: './uploads',
         filename: (req, file, callback) => {
           const filename = `${uuid4()}-${file.originalname}`;
           callback(null, filename);

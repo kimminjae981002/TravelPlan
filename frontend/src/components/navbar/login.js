@@ -9,7 +9,6 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // 로그인 제출
   const handleLogin = async () => {
     const userData = {
       username: username.trim(),
@@ -30,7 +29,7 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
         const data = await response.json();
         alert('로그인 성공');
         onLoginSuccess({ accessToken: data.accessToken });
-        handleClose(); // 모달 닫기
+        handleClose();
       } else {
         const errorText = await response.text();
         const errorResponse = JSON.parse(errorText);
