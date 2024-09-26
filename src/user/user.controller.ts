@@ -85,10 +85,10 @@ export class UserController {
     );
 
     res.cookie('jwt', refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      sameSite: 'none',
+      sameSite: 'strict',
     });
 
     return res.json({
