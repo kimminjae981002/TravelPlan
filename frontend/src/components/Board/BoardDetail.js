@@ -67,10 +67,12 @@ const BoardDetail = ({ setBoards }) => {
 
         if (response.ok) {
           alert('게시글 삭제가 되었습니다.');
+
+          window.location.href = '/';
+
           setBoards((prevBoards) =>
             prevBoards.filter((board) => board.id !== id),
           );
-          window.location.href = '/';
         } else {
           const errorText = await response.text();
           console.error('삭제 실패:', errorText);
@@ -78,7 +80,6 @@ const BoardDetail = ({ setBoards }) => {
         }
       } catch (error) {
         console.error('삭제 중 오류 발생:', error);
-        alert('게시글 삭제 중 오류가 발생했습니다.');
       }
     }
   };

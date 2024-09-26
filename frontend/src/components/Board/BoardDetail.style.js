@@ -18,8 +18,8 @@ export const Title = styled.h1`
 
 export const Image = styled.img`
   width: 100%; /* 가로 100% */
-  max-height: 300px; /* 최대 높이 */
-  object-fit: cover; /* 이미지를 부모 요소에 맞춤 */
+  height: 500px; /* 최대 높이 */
+  object-fit: contain; /* 이미지를 부모 요소에 맞춤 */
   border-radius: 8px; /* 둥근 모서리 */
   margin-bottom: 20px; /* 이미지와 제목 사이 여백 */
 `;

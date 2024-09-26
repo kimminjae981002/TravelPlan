@@ -88,7 +88,7 @@ export class UserController {
       httpOnly: false,
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      sameSite: 'strict',
+      sameSite: 'lax',
     });
 
     return res.json({

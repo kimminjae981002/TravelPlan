@@ -118,10 +118,11 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
               onChange={handleImageChange}
             />
           </Form.Group>
-
-          <Button variant="primary" type="submit">
-            작성하기
-          </Button>
+          <div style={{ marginTop: '10px' }}>
+            <Button variant="primary" type="submit">
+              작성하기
+            </Button>
+          </div>
         </Form>
       </Modal.Body>
     </Modal>

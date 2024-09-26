@@ -46,6 +46,7 @@ const Navigation = () => {
 
     // 로컬 스토리지에서 access token 삭제
     localStorage.removeItem('accessToken');
+    window.location.href = '/';
   };
   return (
     <>
