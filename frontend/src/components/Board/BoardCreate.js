@@ -31,6 +31,36 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
         },
       });
 
+      if (response.status === 401) {
+        const refreshResponse = await fetch(
+          'http://52.78.138.193:3000/user/refresh-token',
+          {
+            method: 'POST',
+            credentials: 'include', // 쿠키를 포함하기 위해 필요
+          },
+        );
+
+        if (refreshResponse.ok) {
+          const data = await refreshResponse.json();
+          accessToken = data.accessToken;
+
+          // 새 액세스 토큰을 로컬 스토리지에 저장
+          localStorage.setItem('accessToken', accessToken);
+
+          // 새 토큰으로 다시 게시글 작성 요청
+          response = await fetch('http://52.78.138.193:3000/board', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+        } else {
+          alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
+          return;
+        }
+      }
+
       if (response.ok) {
         alert('게시글이 작성되었습니다!');
         handleClose(); // 모달 닫기
