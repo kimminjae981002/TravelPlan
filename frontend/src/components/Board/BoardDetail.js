@@ -10,6 +10,7 @@ import {
   Author,
 } from './BoardDetail.style';
 import { jwtDecode } from 'jwt-decode';
+import BoardUpdate from './BoardUpdate'; // BoardUpdate 컴포넌트 import
 
 const BoardDetail = ({ setBoards }) => {
   const { id } = useParams();
@@ -17,6 +18,7 @@ const BoardDetail = ({ setBoards }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentUserId, setCurrentUserId] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -25,35 +27,35 @@ const BoardDetail = ({ setBoards }) => {
     setCurrentUserId(decodedToken.id);
   }, []);
 
-  useEffect(() => {
-    const fetchBoard = async () => {
-      try {
-        const response = await fetch(`http://52.78.138.193:3000/board/${id}`);
+  const fetchBoard = async () => {
+    try {
+      const response = await fetch(`http://52.78.138.193:3000/board/${id}`);
 
-        if (!response.ok) {
-          throw new Error('게시글을 찾을 수 없습니다.');
-        }
-
-        const data = await response.json();
-
-        setBoard(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error('게시글을 찾을 수 없습니다.');
       }
-    };
 
+      const data = await response.json();
+
+      setBoard(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchBoard();
   }, [id]);
 
   if (loading) return <p>Loading...</p>;
-
   if (error) return <p>{error}</p>;
-
   if (!board) return <p>게시글을 찾을 수 없습니다.</p>;
 
-  const handleEdit = () => {};
+  const handleShowEditModal = () => setShowEditModal(true);
+  const handleCloseEditModal = () => setShowEditModal(false);
+  const handleUpdate = () => fetchBoard();
 
   const handleDelete = async () => {
     if (window.confirm('정말로 삭제하시겠습니까?')) {
@@ -97,12 +99,19 @@ const BoardDetail = ({ setBoards }) => {
       <Footer>
         {board.userId === currentUserId && (
           <div>
-            <Button onClick={handleEdit}>수정</Button>
+            <Button onClick={handleShowEditModal}>수정</Button>
             <Button onClick={handleDelete}>삭제</Button>
           </div>
         )}
         <Author> 작성자: {board.userName}</Author>
       </Footer>
+
+      <BoardUpdate
+        show={showEditModal}
+        handleClose={handleCloseEditModal}
+        boardId={id}
+        onUpdate={handleUpdate}
+      />
     </Container>
   );
 };

@@ -1,0 +1,133 @@
+import React, { useEffect, useState } from 'react';
+import { Modal, Form, Button } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+
+const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
+  const [editImage, setEditImage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    const decodedToken = jwtDecode(token);
+    setCurrentUserId(decodedToken.id);
+
+    const fetchBoard = async () => {
+      try {
+        const response = await fetch(
+          `http://52.78.138.193:3000/board/${boardId}`,
+        );
+        if (!response.ok) throw new Error('게시글을 찾을 수 없습니다.');
+        const data = await response.json();
+        setEditTitle(data.title);
+        setEditContent(data.content);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBoard();
+  }, [boardId]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setEditImage(file);
+    }
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('title', editTitle);
+    formData.append('content', editContent);
+    if (editImage) {
+      formData.append('image', editImage);
+    }
+
+    try {
+      const response = await fetch(
+        `http://52.78.138.193:3000/board/${boardId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          body: formData,
+        },
+      );
+
+      if (response.ok) {
+        alert('게시글 수정이 완료되었습니다.');
+        onUpdate(); // 부모 컴포넌트의 업데이트 함수 호출
+        handleClose(); // 모달 닫기
+      } else {
+        const errorText = await response.text();
+        console.error('수정 실패:', errorText);
+        alert(`게시글 수정에 실패했습니다: ${errorText}`);
+      }
+    } catch (error) {
+      console.error('수정 중 오류 발생:', error);
+      alert('게시글 수정 중 오류가 발생했습니다.');
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>게시글 수정</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleEditSubmit}>
+          <Form.Group controlId="formEditTitle">
+            <Form.Label>제목</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="게시글 제목을 입력하세요"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formEditContent">
+            <Form.Label>내용</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="게시글 내용을 입력하세요"
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formEditImage">
+            <Form.Label>이미지 업로드</Form.Label>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </Form.Group>
+          <div style={{ marginTop: '10px' }}>
+            <Button variant="primary" type="submit">
+              수정하기
+            </Button>
+          </div>
+        </Form>
+      </Modal.Body>
+    </Modal>
+  );
+};
+
+export default BoardUpdate;
