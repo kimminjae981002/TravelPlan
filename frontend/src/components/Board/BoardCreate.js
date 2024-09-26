@@ -69,7 +69,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
         const errorResponse = JSON.parse(errorText);
         const messages = errorResponse.message;
         console.error('Error response:', messages);
-        alert('게시글 작성 실패: ' + messages);
+        alert(messages);
       }
     } catch (error) {
       console.error('Error:', error);

@@ -32,11 +32,14 @@ const Signup = ({ show, handleClose }) => {
         alert('회원가입 성공!');
         handleClose();
       } else {
-        const errorText = await response.text();
-        const errorResponse = JSON.parse(errorText);
-        const messages = errorResponse.message;
-        console.error('Error response:', messages);
-        alert('회원가입 실패: ' + messages);
+        const errorText = await response.json();
+
+        const messages = Array.isArray(errorText.message)
+          ? errorText.message
+          : [errorText.message];
+
+        const combinedMessages = messages.join('\n');
+        alert(combinedMessages);
       }
     } catch (error) {
       console.error('Error:', error);
