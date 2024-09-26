@@ -42,7 +42,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
 
         if (refreshResponse.ok) {
           const data = await refreshResponse.json();
-          accessToken = data.accessToken;
+          const accessToken = data.accessToken;
 
           // 새 액세스 토큰을 로컬 스토리지에 저장
           localStorage.setItem('accessToken', accessToken);
@@ -52,11 +52,13 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
             method: 'POST',
             body: formData,
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
           });
         } else {
           alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
+          localStorage.removeItem('accessToken');
+          window.location.href = '/';
           return;
         }
       }
@@ -64,7 +66,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
       if (response.ok) {
         alert('게시글이 작성되었습니다!');
         handleClose(); // 모달 닫기
-        window.location.reload();
+        window.location.href = '/';
       } else {
         const errorText = await response.text();
         const errorResponse = JSON.parse(errorText);
