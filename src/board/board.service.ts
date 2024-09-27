@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  Param,
-  UploadedFile,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './board.entity';
 import { Repository } from 'typeorm';
@@ -11,13 +6,47 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { PaginateBoardDto } from '../common/dto/paginate.dto';
 import moment from 'moment-timezone';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import {
+  S3Client,
+  PutObjectCommand,
+  ObjectCannedACL,
+} from '@aws-sdk/client-s3';
 
 @Injectable()
 export class BoardService {
+  private s3Client: S3Client;
   constructor(
     @InjectRepository(Board)
     private readonly boardRepository: Repository<Board>,
-  ) {}
+  ) {
+    this.s3Client = new S3Client({
+      region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+  }
+
+  // S3에 파일 업로드 메서드
+  async uploadFile(file: Express.Multer.File): Promise<string> {
+    const uploadParams = {
+      Bucket: 'blog-image-s3',
+      Key: `${Date.now().toString()}-${file.originalname}`,
+      Body: file.buffer, // 파일의 버퍼
+      ContentType: file.mimetype,
+    };
+
+    try {
+      const command = new PutObjectCommand(uploadParams);
+      await this.s3Client.send(command);
+      // S3에서의 파일 URL 반환
+      return `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      throw new Error('파일 업로드에 실패했습니다.');
+    }
+  }
 
   async create(
     createBoardDto: CreateBoardDto,
