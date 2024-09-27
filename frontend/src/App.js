@@ -8,9 +8,9 @@ function App() {
     <div className="App">
       <Router>
         <Navigation />
-        // Routes: Route를 그룹화
+        {/* Routes: Route를 그룹화 */}
         <Routes>
-          // Route: 특정 경로로 이동
+          {/* Route: 특정 경로로 이동 */}
           <Route path="/board/:id" element={<BoardDetail />} />
           <Route path="/" element={<HomePage />}></Route>
         </Routes>

@@ -59,7 +59,7 @@ const Navigation = () => {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
             <Nav>
-              /* 삼항연산자 */
+              {/* 삼항연산자  */}
               {isLoggedIn ? (
                 <>
                   <Nav.Link onClick={handleShowBoardCreate}>
