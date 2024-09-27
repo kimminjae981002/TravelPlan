@@ -24,6 +24,8 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
+import multerS3 from 'multer-s3';
+import { S3 } from 'aws-sdk';
 
 @ApiTags('Boards')
 @Controller('board')
@@ -41,13 +43,16 @@ export class BoardController {
   @Post()
   @UseInterceptors(
     FileInterceptor('image', {
-      storage: diskStorage({
-        destination: (req, file, cb) => {
-          cb(null, join(__dirname, '..', '..', 'uploads'));
-        },
-        filename: (req, file, cb) => {
-          console.log(file);
-          cb(null, file.originalname);
+      storage: multerS3({
+        s3: new S3({
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+          region: process.env.AWS_REGION,
+        }),
+        bucket: 'blog-image-s3', // 여기에 버킷 이름을 입력하세요
+        acl: 'public-read', // 필요에 따라 ACL을 설정하세요
+        key: (req, file, cb) => {
+          cb(null, `${Date.now().toString()}-${file.originalname}`); // 고유한 파일 이름으로 설정
         },
       }),
     }),
@@ -57,7 +62,7 @@ export class BoardController {
   async create(
     @UserInfo() user: User,
     @Body() createBoardDto: CreateBoardDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: Express.MulterS3.File,
   ) {
     const { title } = createBoardDto;
 
@@ -70,7 +75,7 @@ export class BoardController {
 
     let imagePath = null;
     if (file) {
-      imagePath = file.path;
+      imagePath = file.location;
     }
 
     await this.boardService.create(
