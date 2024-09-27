@@ -7,10 +7,8 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
   const [image, setImage] = useState(null);
 
   const handleSubmit = async (e) => {
-    // event 기본 방지
     e.preventDefault();
 
-    // form 제출
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
@@ -20,44 +18,10 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
     }
 
     try {
-      const response = await fetch('http://52.78.138.193:3000/board', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      });
+      let response = await boardData(formData);
 
-      // 리프레쉬 토큰 검증 및 엑세스 토큰 갱신
       if (response.status === 401) {
-        const refreshResponse = await fetch(
-          'http://52.78.138.193:3000/user/refresh-token',
-          {
-            method: 'POST',
-            credentials: 'include', // 쿠키 포함 설정
-          },
-        );
-
-        if (refreshResponse.ok) {
-          const data = await refreshResponse.json();
-          const accessToken = data.accessToken;
-
-          localStorage.setItem('accessToken', accessToken);
-
-          response = await fetch('http://52.78.138.193:3000/board', {
-            method: 'POST',
-            body: formData,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-          });
-        } else {
-          // 리프레쉬토큰이 없다면 재로그인
-          alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
-          localStorage.removeItem('accessToken');
-          window.location.href = '/';
-          return;
-        }
+        response = await refreshTokenAndRetry(formData);
       }
 
       if (response.ok) {
@@ -74,6 +38,39 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
     } catch (error) {
       console.error('Error:', error);
       alert('게시글 작성 중 오류가 발생했습니다.');
+    }
+  };
+
+  const boardData = async (formData) => {
+    return fetch('http://52.78.138.193:3000/board', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
+  };
+
+  const refreshTokenAndRetry = async (formData) => {
+    const refreshResponse = await fetch(
+      'http://52.78.138.193:3000/user/refresh-token',
+      {
+        method: 'POST',
+        credentials: 'include',
+      },
+    );
+
+    if (refreshResponse.ok) {
+      const data = await refreshResponse.json();
+      const accessToken = data.accessToken;
+      localStorage.setItem('accessToken', accessToken);
+
+      return boardData(formData);
+    } else {
+      alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
+      localStorage.removeItem('accessToken');
+      window.location.href = '/';
+      return null;
     }
   };
 

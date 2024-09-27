@@ -6,9 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { BoardModule } from './board/board.module';
 import { MulterModule } from '@nestjs/platform-express';
-import { join } from 'path';
 import { S3 } from 'aws-sdk';
 import multerS3 from 'multer-s3';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [

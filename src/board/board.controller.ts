@@ -41,23 +41,7 @@ export class BoardController {
    * @returns
    */
   @Post()
-  @UseInterceptors(
-    FileInterceptor('image', {
-      storage: multerS3({
-        s3: new S3({
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-          region: process.env.AWS_REGION,
-        }),
-        bucket: 'blog-image-s3', // 여기에 버킷 이름을 입력하세요
-        acl: 'public-read', // 필요에 따라 ACL을 설정하세요
-        key: (req, file, cb) => {
-          cb(null, `${Date.now().toString()}-${file.originalname}`); // 고유한 파일 이름으로 설정
-        },
-      }),
-    }),
-    AuthInterceptor,
-  ) // 이미지 업로드 처리
+  @UseInterceptors(FileInterceptor('image'), AuthInterceptor) // 이미지 업로드 처리
   @UseGuards(JwtAuthGuard)
   async create(
     @UserInfo() user: User,
