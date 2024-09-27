@@ -22,8 +22,6 @@ import { PaginateBoardDto } from '../common/dto/paginate.dto';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { join } from 'path';
 import multerS3 from 'multer-s3';
 import { S3 } from 'aws-sdk';
 
@@ -41,7 +39,23 @@ export class BoardController {
    * @returns
    */
   @Post()
-  @UseInterceptors(FileInterceptor('image'), AuthInterceptor) // 이미지 업로드 처리
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: multerS3({
+        s3: new S3({
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+          region: process.env.AWS_REGION,
+        }),
+        bucket: 'blog-image-s3',
+        acl: 'public-read',
+        key: (req, file, cb) => {
+          cb(null, `${Date.now().toString()}-${file.originalname}`);
+        },
+      }),
+    }),
+    AuthInterceptor,
+  ) // 이미지 업로드 처리
   @UseGuards(JwtAuthGuard)
   async create(
     @UserInfo() user: User,
