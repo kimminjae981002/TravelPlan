@@ -12,6 +12,7 @@ import {
 import { jwtDecode } from 'jwt-decode';
 import BoardUpdate from './BoardUpdate'; // BoardUpdate 컴포넌트 import
 
+// setBoard 업데이트를 가져온다.
 const BoardDetail = ({ setBoards }) => {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
@@ -20,6 +21,7 @@ const BoardDetail = ({ setBoards }) => {
   const [currentUserId, setCurrentUserId] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
 
+  // 토큰을 decode하여 유저 정보 가져옴
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
 
@@ -45,6 +47,7 @@ const BoardDetail = ({ setBoards }) => {
     }
   };
 
+  // id값이 변경될 때마다 fetchBoard 함수 호출
   useEffect(() => {
     fetchBoard();
   }, [id]);
@@ -57,6 +60,7 @@ const BoardDetail = ({ setBoards }) => {
   const handleCloseEditModal = () => setShowEditModal(false);
   const handleUpdate = () => fetchBoard();
 
+  // 게시글 삭제
   const handleDelete = async () => {
     if (window.confirm('정말로 삭제하시겠습니까?')) {
       try {
@@ -106,6 +110,7 @@ const BoardDetail = ({ setBoards }) => {
         <Author> 작성자: {board.userName}</Author>
       </Footer>
 
+      {/* 게시글 수정 */}
       <BoardUpdate
         show={showEditModal}
         handleClose={handleCloseEditModal}

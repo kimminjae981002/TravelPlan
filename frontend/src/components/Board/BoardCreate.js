@@ -6,13 +6,11 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
 
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-  };
-
   const handleSubmit = async (e) => {
+    // event 기본 방지
     e.preventDefault();
 
+    // form 제출
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
@@ -30,12 +28,13 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
         },
       });
 
+      // 리프레쉬 토큰 검증 및 엑세스 토큰 갱신
       if (response.status === 401) {
         const refreshResponse = await fetch(
           'http://52.78.138.193:3000/user/refresh-token',
           {
             method: 'POST',
-            credentials: 'include',
+            credentials: 'include', // 쿠키 포함 설정
           },
         );
 
@@ -53,6 +52,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
             },
           });
         } else {
+          // 리프레쉬토큰이 없다면 재로그인
           alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
           localStorage.removeItem('accessToken');
           window.location.href = '/';
@@ -112,7 +112,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
             <Form.Control
               type="file"
               accept="image/*"
-              onChange={handleImageChange}
+              onChange={(e) => setImage(e.target.files[0])}
             />
           </Form.Group>
           <div style={{ marginTop: '10px' }}>

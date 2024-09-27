@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { CenteredModal } from '../Styles/Common/Common.style';
 
+// Navigation.js에서 파라미터를 받아온다.
 const Signup = ({ show, handleClose }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -12,6 +13,7 @@ const Signup = ({ show, handleClose }) => {
   const [name, setName] = useState('');
 
   const handleSignup = async () => {
+    // 정보
     const userData = {
       username: username.trim(),
       password: password.trim(),
@@ -34,6 +36,7 @@ const Signup = ({ show, handleClose }) => {
       } else {
         const errorText = await response.json();
 
+        // message가 배열이라면 하나씩 아니라면 1개만
         const messages = Array.isArray(errorText.message)
           ? errorText.message
           : [errorText.message];

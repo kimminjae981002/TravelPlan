@@ -28,6 +28,7 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
       if (response.ok) {
         const data = await response.json();
         alert('로그인 성공');
+        // 토큰 전달
         onLoginSuccess({ accessToken: data.accessToken });
         handleClose();
       } else {
@@ -51,6 +52,7 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
 
   // 로그인 모달 창
   return (
+    // 모달이 show면 show onHide면 close
     <CenteredModal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>로그인</Modal.Title>

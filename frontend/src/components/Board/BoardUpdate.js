@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
 
+// 게시글 수정
 const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
@@ -9,6 +10,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   const [error, setError] = useState(null);
   const [currentUserId, setCurrentUserId] = useState('');
 
+  // boardId 변경될 때마다 fetchBoard 함수 호출
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     const decodedToken = jwtDecode(token);

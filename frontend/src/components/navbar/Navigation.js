@@ -11,9 +11,10 @@ const Navigation = () => {
   const [showModal, setShowModal] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showBoardCreate, setShowBoardCreate] = useState(false); // 추가
+  const [showBoardCreate, setShowBoardCreate] = useState(false);
   const [accessToken, setAccessToken] = useState('');
 
+  // token이 있으면 useState 업데이트
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -22,6 +23,7 @@ const Navigation = () => {
     }
   }, []);
 
+  // handleShow/Close를 실행하면 useState 업데이트
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
@@ -30,6 +32,7 @@ const Navigation = () => {
 
   const handleShowBoardCreate = () => setShowBoardCreate(true);
 
+  // 로그인이 완료되면 토큰 세팅
   const handleLoginSuccess = (tokens) => {
     setAccessToken(tokens.accessToken);
     localStorage.setItem('accessToken', tokens.accessToken);
@@ -37,6 +40,7 @@ const Navigation = () => {
     handleCloseLogin();
   };
 
+  // 로그아웃 시 토큰 삭제
   const handleLogout = () => {
     alert('로그아웃 완료');
     setAccessToken('');
@@ -55,6 +59,7 @@ const Navigation = () => {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
             <Nav>
+              /* 삼항연산자 */
               {isLoggedIn ? (
                 <>
                   <Nav.Link onClick={handleShowBoardCreate}>
@@ -72,6 +77,7 @@ const Navigation = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      {/* 각 컴포넌트에 파라미터 전달 */}
       <Signup show={showModal} handleClose={handleClose} />
       <Login
         show={showLogin}

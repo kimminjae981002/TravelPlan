@@ -1,6 +1,4 @@
-import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
 import HomePage from './pages/HomePage';
 import Navigation from './components/navbar/Navigation';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -10,7 +8,9 @@ function App() {
     <div className="App">
       <Router>
         <Navigation />
+        // Routes: Route를 그룹화
         <Routes>
+          // Route: 특정 경로로 이동
           <Route path="/board/:id" element={<BoardDetail />} />
           <Route path="/" element={<HomePage />}></Route>
         </Routes>
