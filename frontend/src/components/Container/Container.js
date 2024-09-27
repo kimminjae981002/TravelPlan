@@ -61,7 +61,7 @@ const BoardContainer = () => {
           <BoardCard key={board.id} onClick={() => handleCardClick(board.id)}>
             {board.image && (
               <BoardImage
-                src={board.image} // 이미지 URL 설정
+                src={`http://52.78.138.193:3000/uploads/${board.image.split('/').pop()}`} // 이미지 URL 설정
                 alt={board.title}
               />
             )}
