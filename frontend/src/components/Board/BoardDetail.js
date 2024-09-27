@@ -95,7 +95,6 @@ const BoardDetail = ({ setBoards }) => {
       {board.image && (
         <Image
           src={`http://52.78.138.193:3000/uploads/${board.image.split('/').pop()}`}
-          alt={board.title}
         />
       )}
       <Title>{board.title}</Title>

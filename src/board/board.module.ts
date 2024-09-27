@@ -9,15 +9,23 @@ import { UserModule } from '../user/user.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuid4 } from 'uuid';
+import { join } from 'path';
+import multerS3 from 'multer-s3';
+import { S3 } from 'aws-sdk';
 
 @Module({
   imports: [
     MulterModule.register({
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, callback) => {
-          const filename = `${uuid4()}-${file.originalname}`;
-          callback(null, filename);
+      storage: multerS3({
+        s3: new S3({
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+          region: process.env.AWS_REGION,
+        }),
+        bucket: 'blog-image-s3',
+        acl: 'public-read',
+        key: (req, file, cb) => {
+          cb(null, `${Date.now().toString()}-${file.originalname}`);
         },
       }),
     }),

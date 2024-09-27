@@ -62,7 +62,6 @@ const BoardContainer = () => {
             {board.image && (
               <BoardImage
                 src={`http://52.78.138.193:3000/uploads/${board.image.split('/').pop()}`} // 이미지 URL 설정
-                alt={board.title}
               />
             )}
             <BoardTitle>{board.title}</BoardTitle>
