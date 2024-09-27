@@ -92,11 +92,7 @@ const BoardDetail = ({ setBoards }) => {
 
   return (
     <Container>
-      {board.image && (
-        <Image
-          src={`http://52.78.138.193:3000/uploads/${board.image.split('/').pop()}`}
-        />
-      )}
+      {board.image && <Image src={board.image} />}
       <Title>{board.title}</Title>
       <Content>{board.content}</Content>
       <Footer>
