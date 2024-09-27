@@ -65,6 +65,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
     } catch (error) {
       console.error('수정 중 오류 발생:', error);
       alert('게시글 수정 중 오류가 발생했습니다.');
+      window.location.href = '/';
     }
   };
 

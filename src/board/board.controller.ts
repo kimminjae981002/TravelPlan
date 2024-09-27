@@ -59,7 +59,7 @@ export class BoardController {
 
     let imagePath = null;
     if (file) {
-      imagePath = file.location;
+      imagePath = file.path;
     }
 
     await this.boardService.create(
