@@ -8,13 +8,11 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   const [editContent, setEditContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [setCurrentUserId] = useState('');
 
   // 게시글 정보 가져오기
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     const decodedToken = jwtDecode(token);
-    setCurrentUserId(decodedToken.id);
 
     const fetchBoard = async () => {
       try {

@@ -39,7 +39,6 @@ const BoardContainer = () => {
 
     if (response && response.ok) {
       // 액세스 토큰이 유효한 경우 바로 게시글로 이동
-      console.log(response);
       navigate(`/board/${id}`);
     } else if (response.status === 401 || response.status === 403) {
       // 토큰이 만료되었거나 유효하지 않은 경우
