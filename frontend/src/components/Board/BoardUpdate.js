@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
-import { jwtDecode } from 'jwt-decode';
 import { performRequest } from '../RefreshToken/RefreshToken';
 
 const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
