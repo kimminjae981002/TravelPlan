@@ -6,14 +6,9 @@ import { performRequest } from '../RefreshToken/RefreshToken';
 const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   // 게시글 정보 가져오기
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    const decodedToken = jwtDecode(token);
-
     const fetchBoard = async () => {
       try {
         const response = await fetch(
@@ -24,9 +19,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
         setEditTitle(data.title);
         setEditContent(data.content);
       } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+        console.log(error.message);
       }
     };
 
@@ -65,9 +58,6 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
       alert('게시글 수정 중 오류가 발생했습니다.');
     }
   };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
 
   return (
     <Modal show={show} onHide={handleClose}>
