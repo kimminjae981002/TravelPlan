@@ -4,7 +4,7 @@ export const performRequest = async (url, options, formData = null) => {
   // 만약 요청이 실패하고 상태 코드가 401 (Unauthorized)일 경우
   if (!response.ok && response.status === 401) {
     const refreshResponse = await fetch(
-      'http://52.78.138.193:3000/user/refresh-token',
+      'https://xn--9r2b17b.shop/user/refresh-token',
       {
         method: 'POST',
         credentials: 'include',

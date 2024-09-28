@@ -28,7 +28,7 @@ const BoardContainer = () => {
 
     // 현재 액세스 토큰을 사용하여 게시글 조회를 시도
     const response = await performRequest(
-      `http://52.78.138.193:3000/board/${id}`,
+      `https://xn--9r2b17b.shop/board/${id}`,
       {
         method: 'GET',
         headers: {
@@ -55,7 +55,7 @@ const BoardContainer = () => {
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const response = await fetch('http://52.78.138.193:3000/board', {
+        const response = await fetch('https://xn--9r2b17b.shop/board', {
           method: 'GET',
         });
 

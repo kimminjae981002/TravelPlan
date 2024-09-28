@@ -19,7 +19,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
       formData.append('image', image);
     }
 
-    const url = 'http://52.78.138.193:3000/board';
+    const url = 'https://xn--9r2b17b.shop/board';
     const options = {
       method: 'POST',
       body: formData,
