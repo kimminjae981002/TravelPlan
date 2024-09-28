@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Container,
@@ -38,25 +38,22 @@ const BoardDetail = ({ setBoards }) => {
       alert('로그인이 필요합니다.');
       window.location.href = '/';
     }
-  }, []);
+  }, [setCurrentUserId]);
 
-  const fetchBoard = async () => {
+  const fetchBoard = useCallback(async () => {
     try {
       const response = await fetch(`http://52.78.138.193:3000/board/${id}`);
-
       if (!response.ok) {
         throw new Error('게시글을 찾을 수 없습니다.');
       }
-
       const data = await response.json();
-
       setBoard(data);
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]); // id를 의존성으로 추가
 
   // id값이 변경될 때마다 fetchBoard 함수 호출
   useEffect(() => {
