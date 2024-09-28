@@ -23,7 +23,7 @@ async function bootstrap() {
 
   // cors 설정
   const corsOptions: CorsOptions = {
-    origin: 'http://localhost:3000',
+    origin: 'https://main--kimminjae98.netlify.app',
     credentials: true,
     exposedHeaders: ['Authorization', 'Content-Type'],
     methods: 'GET, POST, PUT, DELETE, OPTIONS, PATCH',
