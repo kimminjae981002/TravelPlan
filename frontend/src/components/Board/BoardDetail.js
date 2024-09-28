@@ -61,7 +61,7 @@ const BoardDetail = ({ setBoards }) => {
   // id값이 변경될 때마다 fetchBoard 함수 호출
   useEffect(() => {
     fetchBoard();
-  }, [id]);
+  }, [id, fetchBoard]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;

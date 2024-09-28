@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
-import { Logout } from '../navbar/Logout';
 import { performRequest } from '../RefreshToken/RefreshToken';
 
 const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
@@ -9,7 +8,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   const [editContent, setEditContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentUserId, setCurrentUserId] = useState('');
+  const [setCurrentUserId] = useState('');
 
   // 게시글 정보 가져오기
   useEffect(() => {
