@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { CenteredModal } from '../Styles/Common/Common.style';
+import { performRequest } from '../RefreshToken/RefreshToken';
 
 const Board = ({ show, handleClose, isLoggedIn }) => {
   const [title, setTitle] = useState('');
@@ -18,14 +19,19 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
       formData.append('image', image);
     }
 
+    const url = 'http://52.78.138.193:3000/board';
+    const options = {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    };
+
     try {
-      let response = await boardData(formData);
+      const response = await performRequest(url, options);
 
-      if (response.status === 401) {
-        response = await refreshTokenAndRetry(formData);
-      }
-
-      if (response.ok) {
+      if (response && response.ok) {
         alert('게시글이 작성되었습니다!');
         handleClose();
         window.location.href = '/';
@@ -39,39 +45,6 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
     } catch (error) {
       console.error('Error:', error);
       alert('게시글 작성 중 오류가 발생했습니다.');
-    }
-  };
-
-  const boardData = async (formData) => {
-    return fetch('http://52.78.138.193:3000/board', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      },
-    });
-  };
-
-  const refreshTokenAndRetry = async (formData) => {
-    const refreshResponse = await fetch(
-      'http://52.78.138.193:3000/user/refresh-token',
-      {
-        method: 'POST',
-        credentials: 'include',
-      },
-    );
-
-    if (refreshResponse.ok) {
-      const data = await refreshResponse.json();
-      const accessToken = data.accessToken;
-      localStorage.setItem('accessToken', accessToken);
-
-      return boardData(formData);
-    } else {
-      alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
-      localStorage.removeItem('accessToken');
-      window.location.href = '/';
-      return null;
     }
   };
 

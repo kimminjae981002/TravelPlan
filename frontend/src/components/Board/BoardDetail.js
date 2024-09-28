@@ -4,13 +4,15 @@ import {
   Container,
   Title,
   Content,
-  Footer,
+  UpdateAndDelete,
   Image,
   Button,
   Author,
+  CreateTime,
 } from './BoardDetail.style';
 import { jwtDecode } from 'jwt-decode';
 import BoardUpdate from './BoardUpdate'; // BoardUpdate 컴포넌트 import
+import { handleBoardDelete } from './BoardDelete';
 
 // setBoard 업데이트를 가져온다.
 const BoardDetail = ({ setBoards }) => {
@@ -20,6 +22,10 @@ const BoardDetail = ({ setBoards }) => {
   const [error, setError] = useState(null);
   const [currentUserId, setCurrentUserId] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
+
+  const handleShowEditModal = () => setShowEditModal(true);
+  const handleCloseEditModal = () => setShowEditModal(false);
+  const handleUpdate = () => fetchBoard();
 
   // 토큰을 decode하여 유저 정보 가져옴
   useEffect(() => {
@@ -61,54 +67,49 @@ const BoardDetail = ({ setBoards }) => {
   if (error) return <p>{error}</p>;
   if (!board) return <p>게시글을 찾을 수 없습니다.</p>;
 
-  const handleShowEditModal = () => setShowEditModal(true);
-  const handleCloseEditModal = () => setShowEditModal(false);
-  const handleUpdate = () => fetchBoard();
-
-  // 게시글 삭제
-  const handleDelete = async () => {
-    if (window.confirm('정말로 삭제하시겠습니까?')) {
-      try {
-        const response = await fetch(`http://52.78.138.193:3000/board/${id}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
-        });
-
-        if (response.ok) {
-          alert('게시글 삭제가 되었습니다.');
-
-          window.location.href = '/';
-
-          setBoards((prevBoards) =>
-            prevBoards.filter((board) => board.id !== id),
-          );
-        } else {
-          const errorText = await response.text();
-          console.error('삭제 실패:', errorText);
-          alert(`게시글 삭제에 실패했습니다.`);
-        }
-      } catch (error) {
-        console.error('삭제 중 오류 발생:', error);
-      }
-    }
-  };
-
   return (
     <Container>
-      {board.image && <Image src={board.image} />}
       <Title>{board.title}</Title>
-      <Content>{board.content}</Content>
-      <Footer>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          margin: '10px 0',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Author>{board.userName}</Author>
+          <CreateTime style={{ marginLeft: '5px' }}>
+            {new Date(
+              new Date(board.createdAt).getTime() - 9 * 60 * 60 * 1000,
+            ).toLocaleString('ko-KR', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            })}
+          </CreateTime>
+        </div>
         {board.userId === currentUserId && (
-          <div>
-            <Button onClick={handleShowEditModal}>수정</Button>
-            <Button onClick={handleDelete}>삭제</Button>
-          </div>
+          <UpdateAndDelete style={{ display: 'flex', alignItems: 'center' }}>
+            <Button
+              onClick={handleShowEditModal}
+              style={{ marginRight: '10px' }}
+            >
+              수정
+            </Button>
+            <Button onClick={() => handleBoardDelete(board.id, setBoards)}>
+              삭제
+            </Button>
+          </UpdateAndDelete>
         )}
-        <Author> 작성자: {board.userName}</Author>
-      </Footer>
+      </div>
+
+      {board.image && <Image src={board.image} />}
+      <Content>{board.content}</Content>
 
       {/* 게시글 수정 */}
       <BoardUpdate

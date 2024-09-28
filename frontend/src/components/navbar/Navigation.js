@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import Signup from './Signup';
 import Login from './Login';
 import Board from '../Board/BoardCreate';
+import { Logout } from './Logout'; // logout.js 경로에 맞게 수정
 
 const Navigation = () => {
   const [showModal, setShowModal] = useState(false);
@@ -40,16 +41,10 @@ const Navigation = () => {
     handleCloseLogin();
   };
 
-  // 로그아웃 시 토큰 삭제
   const handleLogout = () => {
-    alert('로그아웃 완료');
-    setAccessToken('');
-    setIsLoggedIn(false);
-
-    document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
-    localStorage.removeItem('accessToken');
-    window.location.href = '/';
+    Logout(setAccessToken, setIsLoggedIn); // 로그아웃 함수 호출
   };
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">

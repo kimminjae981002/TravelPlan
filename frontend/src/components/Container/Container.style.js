@@ -2,18 +2,18 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 70vh;
   margin-top: 300px;
   background-color: white;
   color: black;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 20px;
+  padding: 0 300px;
 `;
 
 export const BoardCard = styled.div`
-  width: calc(30.33% - 100px);
+  width: calc(25% - 40px);
   height: calc(60.33% - 100px);
   margin: 20px;
   padding: 10px;
@@ -23,18 +23,38 @@ export const BoardCard = styled.div`
   cursor: pointer;
   aspect-ratio: 1;
 
-  @media (max-width: 768px) {
-    width: calc(45% - 40px);
+  @media (max-width: 1700px) {
+    width: calc(33.33% - 40px);
+    font-size: 0.9em;
+  }
+
+  @media (max-width: 1200px) {
+    width: calc(50% - 40px);
+    font-size: 0.85em;
+  }
+
+  @media (max-width: 800px) {
+    width: 500px;
+    font-size: 0.8em;
+  }
+
+  @media (max-width: 580px) {
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    font-size: 0.8em;
   }
 
   @media (max-width: 480px) {
-    width: calc(100% - 40px);
+    width: 20rem;
+    font-size: 0.8em;
+    margin-right: 7rem;
   }
 `;
 
 export const BoardImage = styled.img`
   width: 100%;
-  height: 70%;
+  height: 50%;
   border-radius: 8px;
 `;
 
@@ -62,4 +82,6 @@ export const BoardAuthor = styled.p`
   text-align: left;
   display: flex;
   justify-content: space-between;
+  border-top: 1px solid rgba(128, 128, 128, 0.5);
+  padding-top: 10px;
 `;

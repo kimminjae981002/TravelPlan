@@ -37,7 +37,7 @@ export class BoardController {
    * @returns
    */
   @Post()
-  @UseInterceptors(FileInterceptor('image')) // 이미지 업로드 처리
+  @UseInterceptors(FileInterceptor('image'), AuthInterceptor) // 이미지 업로드 처리
   @UseGuards(JwtAuthGuard)
   async create(
     @UserInfo() user: User,

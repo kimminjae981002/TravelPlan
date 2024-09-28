@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
+import { Logout } from '../navbar/Logout';
+import { performRequest } from '../RefreshToken/RefreshToken';
 
-// 게시글 수정
 const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
@@ -10,7 +11,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   const [error, setError] = useState(null);
   const [currentUserId, setCurrentUserId] = useState('');
 
-  // boardId 변경될 때마다 fetchBoard 함수 호출
+  // 게시글 정보 가져오기
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     const decodedToken = jwtDecode(token);
@@ -41,31 +42,30 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
     formData.append('title', editTitle);
     formData.append('content', editContent);
 
-    try {
-      const response = await fetch(
-        `http://52.78.138.193:3000/board/${boardId}`,
-        {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
-          body: formData,
-        },
-      );
+    const url = `http://52.78.138.193:3000/board/${boardId}`;
+    const options = {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: formData,
+    };
 
-      if (response.ok) {
+    try {
+      const response = await performRequest(url, options);
+
+      if (response && response.ok) {
         alert('게시글 수정이 완료되었습니다.');
         onUpdate();
         handleClose();
       } else {
         const errorText = await response.json();
-        console.error('수정 실패:', errorText[0]);
+        console.error('수정 실패:', errorText.message);
         alert(errorText.message);
       }
     } catch (error) {
       console.error('수정 중 오류 발생:', error);
       alert('게시글 수정 중 오류가 발생했습니다.');
-      window.location.href = '/';
     }
   };
 

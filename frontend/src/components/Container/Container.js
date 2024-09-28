@@ -8,6 +8,7 @@ import {
   BoardDescription,
 } from './Container.style';
 import { useNavigate } from 'react-router-dom';
+import { performRequest } from '../RefreshToken/RefreshToken';
 
 const BoardContainer = () => {
   // useState 훅을 이용해 기존 boards를 setBoards로 업데이트
@@ -16,15 +17,32 @@ const BoardContainer = () => {
   // 특정 경로로 이동할 수 있는 훅
   const navigate = useNavigate();
 
-  // 게시글 클릭 시 로그인 확인
-  const handleCardClick = (id) => {
+  const handleCardClick = async (id) => {
     const token = localStorage.getItem('accessToken');
+
+    // 토큰이 없으면 로그인 필요 알림
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
     }
-    // board/id로 이동한다.
-    navigate(`/board/${id}`);
+
+    // 현재 액세스 토큰을 사용하여 게시글 조회를 시도
+    const response = await performRequest(
+      `http://52.78.138.193:3000/board/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (response && response.ok) {
+      // 액세스 토큰이 유효한 경우 바로 게시글로 이동
+      navigate(`/board/${id}`);
+    } else {
+      alert('게시글 조회에 실패했습니다.');
+    }
   };
 
   // 게시글 READ API를 가져와 실행
@@ -67,8 +85,8 @@ const BoardContainer = () => {
             <BoardTitle>{board.title}</BoardTitle>
             <BoardDescription>{board.content}</BoardDescription>
             <BoardAuthor>
-              <span>{board.userName}</span>
-              <span>
+              <span style={{ fontWeight: 'bold' }}>by. {board.userName}</span>
+              <span style={{ fontSize: '10px', paddingTop: '10px' }}>
                 {new Date(
                   new Date(board.createdAt).getTime() - 9 * 60 * 60 * 1000,
                 ).toLocaleString('ko-KR', {
