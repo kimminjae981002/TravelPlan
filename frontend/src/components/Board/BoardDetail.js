@@ -25,8 +25,13 @@ const BoardDetail = ({ setBoards }) => {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
 
-    const decodedToken = jwtDecode(token);
-    setCurrentUserId(decodedToken.id);
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setCurrentUserId(decodedToken.id);
+    } else {
+      alert('로그인이 필요합니다.');
+      window.location.href = '/';
+    }
   }, []);
 
   const fetchBoard = async () => {

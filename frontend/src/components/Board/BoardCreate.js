@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { CenteredModal } from '../Styles/Common/Common.style';
 
 const Board = ({ show, handleClose, isLoggedIn }) => {
   const [title, setTitle] = useState('');
@@ -75,7 +76,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <CenteredModal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>게시글 작성</Modal.Title>
       </Modal.Header>
@@ -119,7 +120,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
           </div>
         </Form>
       </Modal.Body>
-    </Modal>
+    </CenteredModal>
   );
 };
 
