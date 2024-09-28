@@ -1,6 +1,6 @@
 # Blog API와 Docker와 CI/CD 이용한 프로젝트
 
-- 배포 주소: http://52.78.138.193:3000/api-docs
+- 배포 주소: https://main--kimminjae98.netlify.app/
 
 ## 주요 기능
 
@@ -30,15 +30,27 @@
    MYSQL_ROOT_PASSWORD = 도커 MySQL 컨테이너 패스워드
    MYSQL_DATABASE = 도커 MySQL 컨테이너 데이터베이스
 
+   MY_AWS_SECRET_ACCESS_KEY= AWS S3(IAM) KEY(VALUE)
+   MY_AWS_REGION=AWS REGION
+   MY_AWS_ACCESS_KEY_ID=AWS S3(IAM) KEY
+
 ### 배포 과정
 
-이 프로젝트는 Docker와 CI/CD를 이용해 AWS EC2에 배포되었습니다.
+이 프로젝트는
+백엔드는 Nest.js를 통해 Docker와 CI/CD를 이용해 AWS EC2에 배포되었고,
+프론트엔드 Netlify와 연동하기 위해 nginx를 이용해 HTTPS를 적용하였습니다.
+프론트엔드는 서버리스 아키텍처인 Netlify를 통해 배포되었습니다.
 
 ### 기술 스택
 
 백엔드: Nest.js
+프론트엔드: React
 데이터베이스: MySQL (AWS RDS)
-배포: Docker, AWS EC2, GitHub Actions
+배포: Docker, AWS EC2, GitHub Actions(CI/CD), Netlify
+
+### 이미지 저장
+
+- AWS S3를 통해 이미지 파일을 안전하게 저장하고 관리합니다.
 
 #### Docker란?
 
@@ -58,3 +70,30 @@
 #### CI/CD의 특징
 
 - 새로운 기능을 추가하는 일이 많으면 Commit을 하고, Merge를 하고 서버에서 다시 pull을 받아야 한다. 이 과정이 많아지면 귀찮기 때문에 CI/CD를 사용하여 귀찮은 일을 줄인다.
+
+#### 서버리스란?
+
+- 서버 관리를 개발자가 아닌 클라우드 서비스 제공업체가 맡는다는 것
+
+#### 서버리스 특징
+
+- 자동 확장: 사용량에 따라 자동으로 리소스가 확장되거나 축소된다. 이는 트래픽이 급증하더라도 시스템이 원활하게 작동하도록 돕는다.
+- 요금 체계: 사용한 만큼만 비용을 지불한다. 서버를 항상 실행하는 것이 아니라, 요청이 있을 때만 실행된다.
+- 개발 집중: 서버 관리나 인프라 설정에 신경 쓸 필요 없이 애플리케이션의 비즈니스 로직에만 집중할 수 있다.
+- 이벤트 기반: 함수가 특정 이벤트에 의해 트리거되어 실행된다. 예를 들어, HTTP 요청, 파일 업로드, 데이터베이스 변경 등이 있을 수 있다.
+
+#### Netlify란?
+
+- 정적 웹 호스팅 및 웹 개발 서비스를 쉽고 빠르게 배포할 수 있도록 도와주는 플랫폼이다.
+
+#### Netlify 특징
+
+- 정적 사이트 호스팅
+
+1. GitHub, GitLab, Bitbucket과 통합되어 코드 저장소에서 자동으로 사이트를 빌드하고 배포한다.
+2. CDN(콘텐츠 전송 네트워크)을 통해 빠르고 안정적인 콘텐츠 전송이 가능하다.
+
+- 서버리스 함수
+- 자동화된 빌드 및 배포
+- 기본적으로 HTTPS를 지원하여 웹사이트의 보안을 강화한다.
+- 다양한 빌드 도구 및 프레임워크(React, Vue 등)와 쉽게 통합할 수 있다.
