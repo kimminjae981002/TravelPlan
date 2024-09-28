@@ -46,9 +46,9 @@ export const BoardCard = styled.div`
   }
 
   @media (max-width: 480px) {
-    width: 20rem;
+    width: 25rem;
     font-size: 0.8em;
-    margin-right: 11rem;
+    margin-right: 13rem;
   }
 `;
 
