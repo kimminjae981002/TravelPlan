@@ -15,7 +15,7 @@ export const Container = styled.div`
 export const BoardCard = styled.div`
   width: calc(25% - 40px);
   height: calc(60.33% - 100px);
-  margin: 20px;
+  margin: 30px;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
