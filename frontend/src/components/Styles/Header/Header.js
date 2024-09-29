@@ -92,11 +92,10 @@ const Header = () => {
       });
 
       const data = await response.json();
-      console.log(data, 'data');
-      console.log(location, category);
+
       if (data.success) {
         const places = data.data.join('\n');
-        alert('추천 장소\n' + places); // 추천 장소 출력
+        alert(places); // 추천 장소 출력
       } else {
         alert('오류 발생: ' + data.message);
       }

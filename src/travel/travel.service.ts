@@ -30,7 +30,7 @@ export class TravelService {
     });
 
     await this.travelRepository.save(newTravel);
-    console.log(newTravel, 'service');
+
     return places;
   }
 
