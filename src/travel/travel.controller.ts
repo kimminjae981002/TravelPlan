@@ -31,7 +31,7 @@ export class TravelController {
   ) {
     try {
       const places = await this.travelService.create(createTravelDto, user.id);
-      console.log('conto', places);
+
       return {
         success: true,
         message: 'okay',
