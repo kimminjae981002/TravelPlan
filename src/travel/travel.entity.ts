@@ -17,6 +17,10 @@ export class Travel {
   @Column({ type: 'varchar', nullable: false })
   location: string;
 
+  @ApiProperty({ description: '일정', example: '3' })
+  @Column({ type: 'int', nullable: false })
+  day: number;
+
   @CreateDateColumn() // 생성됐을 떄의 시간
   createdAt: Date;
 
