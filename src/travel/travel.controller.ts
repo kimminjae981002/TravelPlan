@@ -18,7 +18,7 @@ import { UserInfo } from '../common/decorator/user.decorator';
 export class TravelController {
   constructor(private readonly travelService: TravelService) {}
   /**
-   * 여행 생성
+   * 카카오 api를 이용한 장소 추천
    * @param CreateTravelDto
    * @returns
    */
@@ -30,15 +30,16 @@ export class TravelController {
     @UserInfo() user: User,
   ) {
     try {
-      await this.travelService.create(createTravelDto, user.id);
+      const places = await this.travelService.create(createTravelDto, user.id);
       return {
         success: true,
         message: 'okay',
+        data: places,
       };
     } catch (error) {
       return {
         success: false,
-        message: error,
+        message: error.message,
       };
     }
   }
