@@ -82,21 +82,21 @@ const Header = () => {
     }
 
     try {
-      const response = await fetch('https://xn--9r2b17b.shop/travel', {
+      const response = await fetch('http://localhost:3000/travel', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
         body: JSON.stringify({ keyword: `${location} ${category}` }),
       });
 
       const data = await response.json();
-
+      console.log(data, 'data');
+      console.log(location, category);
       if (data.success) {
         const places = data.data.join('\n');
-        alert('추천 장소: ' + places); // 추천 장소 출력
+        alert('추천 장소\n' + places); // 추천 장소 출력
       } else {
         alert('오류 발생: ' + data.message);
       }
