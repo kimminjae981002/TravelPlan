@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Board } from '../board/board.entity';
 import { Travel } from '../travel/travel.entity';
+import { OpenAi } from '../open-ai/open-ai.entity';
 
 const role = {
   User: 'user',
@@ -43,4 +44,7 @@ export class User {
 
   @OneToMany(() => Travel, (travel) => travel.user)
   travels: Travel[];
+
+  @OneToMany(() => OpenAi, (openAi) => openAi.user)
+  openAi: OpenAi[];
 }
