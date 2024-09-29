@@ -15,12 +15,18 @@ import {
 } from './Header.style';
 
 const Header = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPlacesModalOpen, setIsPlacesModalOpen] = useState(false);
+  const [isTravelPlanModalOpen, setIsTravelPlanModalOpen] = useState(false);
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState('관광지'); // 기본 카테고리 설정
+  const [duration, setDuration] = useState(''); // 기간
+  const [who, setWho] = useState('가족'); // 구성원
+  const [season, setSeason] = useState(''); // 계절
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  const handleOpenPlacesModal = () => setIsPlacesModalOpen(true);
+  const handleClosePlacesModal = () => setIsPlacesModalOpen(false);
+  const handleOpenTravelPlanModal = () => setIsTravelPlanModalOpen(true);
+  const handleCloseTravelPlanModal = () => setIsTravelPlanModalOpen(false);
 
   const locations = [
     '서울',
@@ -75,6 +81,8 @@ const Header = () => {
     '서귀포',
   ];
 
+  const seasons = ['봄', '여름', '가을', '겨울'];
+
   const handleSubmit = async () => {
     if (!location) {
       alert('지역을 선택해주세요.');
@@ -105,6 +113,34 @@ const Header = () => {
     }
   };
 
+  const handleTravelPlanSubmit = async () => {
+    if (!location || !duration || !who || !season) {
+      alert('모든 정보를 입력해주세요.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/openAi', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify({ destination: location, duration, who, season }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(data.data); // 여행 일정 출력
+      } else {
+        alert('오류 발생: ' + data.message);
+      }
+    } catch (error) {
+      console.error('API 호출 중 오류 발생:', error);
+      alert('API 호출 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <>
       <StyleHeader>
@@ -119,15 +155,24 @@ const Header = () => {
             ↓↓ 글을 클릭하여 사용해보세요.
           </Title>
           <ButtonContainer>
-            <Button onClick={handleOpenModal}>지역 관광지/맛집 목록보기</Button>
+            <Button onClick={handleOpenPlacesModal}>
+              지역 관광지/맛집 목록보기
+            </Button>
+            <Button
+              onClick={handleOpenTravelPlanModal}
+              style={{ marginLeft: '10px' }}
+            >
+              AI 여행 일정 짜줘
+            </Button>
           </ButtonContainer>
         </div>
       </StyleHeader>
 
-      {isModalOpen && (
+      {/* 관광지/맛집 추천 모달 */}
+      {isPlacesModalOpen && (
         <ModalOverlay>
           <ModalContainer>
-            <CloseButton onClick={handleCloseModal}>X</CloseButton>
+            <CloseButton onClick={handleClosePlacesModal}>X</CloseButton>
             <ModalTitle>관광지, 맛집 추천받기</ModalTitle>
             <div>
               <h4>지역 선택</h4>
@@ -154,13 +199,76 @@ const Header = () => {
               </Select>
             </div>
 
-            <SubmitButton
-              style={{ marginRight: '10px' }}
-              onClick={handleSubmit}
-            >
-              추천받기
+            <SubmitButton onClick={handleSubmit}>추천받기</SubmitButton>
+            <CancelButton onClick={handleClosePlacesModal}>
+              안 받을래요..
+            </CancelButton>
+          </ModalContainer>
+        </ModalOverlay>
+      )}
+
+      {/* 여행 일정 생성 모달 */}
+      {isTravelPlanModalOpen && (
+        <ModalOverlay>
+          <ModalContainer>
+            <CloseButton onClick={handleCloseTravelPlanModal}>X</CloseButton>
+            <ModalTitle>여행 일정 생성하기</ModalTitle>
+            <div>
+              <h4>지역 선택</h4>
+              <Select
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              >
+                <option value="">지역을 선택하세요</option>
+                {locations.map((loc) => (
+                  <option key={loc} value={loc}>
+                    {loc}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div>
+              <h4>여행 기간</h4>
+              <Select
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+              >
+                <option value="">기간을 선택하세요</option>
+                {Array.from({ length: 31 }, (_, i) => (
+                  <option key={i + 1} value={`${i + 1}일`}>
+                    {i + 1}일
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div>
+              <h4>구성원</h4>
+              <Select value={who} onChange={(e) => setWho(e.target.value)}>
+                <option value="가족">가족</option>
+                <option value="친구">친구</option>
+                <option value="혼자">혼자</option>
+                <option value="커플">커플</option>
+              </Select>
+            </div>
+            <div>
+              <h4>계절</h4>
+              <Select
+                value={season}
+                onChange={(e) => setSeason(e.target.value)}
+              >
+                <option value="">계절을 선택하세요</option>
+                {seasons.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </Select>
+            </div>
+
+            <SubmitButton onClick={handleTravelPlanSubmit}>
+              일정 만들기
             </SubmitButton>
-            <CancelButton onClick={handleCloseModal}>
+            <CancelButton onClick={handleCloseTravelPlanModal}>
               안 받을래요..
             </CancelButton>
           </ModalContainer>
