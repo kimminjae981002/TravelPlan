@@ -84,6 +84,7 @@ export const CloseButton = styled.button`
 
 export const ModalTitle = styled.h2`
   margin: 0 0 20px 0;
+  font-size: 25px;
 `;
 
 export const Select = styled.select`

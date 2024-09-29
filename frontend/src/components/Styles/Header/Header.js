@@ -17,8 +17,7 @@ import {
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [location, setLocation] = useState('');
-  const [days, setDays] = useState('3');
-  const [isLoading, setIsLoading] = useState(false);
+  const [category, setCategory] = useState('관광지'); // 기본 카테고리 설정
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -76,6 +75,35 @@ const Header = () => {
     '서귀포',
   ];
 
+  const handleSubmit = async () => {
+    if (!location) {
+      alert('지역을 선택해주세요.');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://xn--9r2b17b.shop/travel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keyword: `${location} ${category}` }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        const places = data.data.join('\n');
+        alert('추천 장소: ' + places); // 추천 장소 출력
+      } else {
+        alert('오류 발생: ' + data.message);
+      }
+    } catch (error) {
+      console.error('API 호출 중 오류 발생:', error);
+      alert('API 호출 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <>
       <StyleHeader>
@@ -90,7 +118,7 @@ const Header = () => {
             ↓↓ 글을 클릭하여 사용해보세요.
           </Title>
           <ButtonContainer>
-            <Button onClick={handleOpenModal}>여행 대신 짜줄까요?</Button>
+            <Button onClick={handleOpenModal}>지역 관광지/맛집 목록보기</Button>
           </ButtonContainer>
         </div>
       </StyleHeader>
@@ -99,7 +127,7 @@ const Header = () => {
         <ModalOverlay>
           <ModalContainer>
             <CloseButton onClick={handleCloseModal}>X</CloseButton>
-            <ModalTitle>여행 계획하기</ModalTitle>
+            <ModalTitle>관광지, 맛집 추천받기</ModalTitle>
             <div>
               <h4>지역 선택</h4>
               <Select
@@ -115,24 +143,25 @@ const Header = () => {
               </Select>
             </div>
             <div>
-              <h4>여행 기간 (일 수)</h4>
-              <Select value={days} onChange={(e) => setDays(e.target.value)}>
-                {Array.from({ length: 30 }, (_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1}일
-                  </option>
-                ))}
+              <h4>카테고리 선택</h4>
+              <Select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="관광지">관광지</option>
+                <option value="맛집">맛집</option>
               </Select>
             </div>
+
             <SubmitButton
               style={{ marginRight: '10px' }}
-              onClick={() => {
-                alert('여행생성');
-              }}
+              onClick={handleSubmit}
             >
-              계획하기
+              추천받기
             </SubmitButton>
-            <CancelButton onClick={handleCloseModal}>취소</CancelButton>
+            <CancelButton onClick={handleCloseModal}>
+              안 받을래요..
+            </CancelButton>
           </ModalContainer>
         </ModalOverlay>
       )}
