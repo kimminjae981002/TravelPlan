@@ -9,6 +9,7 @@ import { AuthModule } from '../auth/auth.module';
 import { JwtStrategy } from '../auth/jwt.strategy';
 import { BoardModule } from '../board/board.module';
 import { AuthService } from '../auth/auth.service';
+import { TravelModule } from '../travel/travel.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthService } from '../auth/auth.service';
     }),
     forwardRef(() => AuthModule),
     forwardRef(() => BoardModule),
+    forwardRef(() => TravelModule),
   ],
   providers: [UserService, JwtStrategy, AuthService],
   controllers: [UserController],

@@ -6,9 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
-import multerS3 from 'multer-s3';
 import { MulterModule } from '@nestjs/platform-express';
-import { S3Client } from '@aws-sdk/client-s3';
 
 @Module({
   imports: [

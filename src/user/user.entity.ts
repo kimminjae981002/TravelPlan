@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Board } from '../board/board.entity';
+import { Travel } from '../travel/travel.entity';
 
 const role = {
   User: 'user',
@@ -39,4 +40,7 @@ export class User {
 
   @OneToMany(() => Board, (board) => board.user)
   boards: Board[];
+
+  @OneToMany(() => Travel, (travel) => travel.user)
+  travels: Travel[];
 }
