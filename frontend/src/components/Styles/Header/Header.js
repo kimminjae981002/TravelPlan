@@ -28,6 +28,32 @@ const Header = () => {
   const handleOpenTravelPlanModal = () => setIsTravelPlanModalOpen(true);
   const handleCloseTravelPlanModal = () => setIsTravelPlanModalOpen(false);
 
+  const handlePlacesClick = async () => {
+    const token = localStorage.getItem('accessToken');
+
+    // 토큰이 없으면 로그인 필요 알림
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    // 로그인 되어 있을 경우 지역 관광지/맛집 모달 열기
+    handleOpenPlacesModal();
+  };
+
+  const handleTravelPlanClick = async () => {
+    const token = localStorage.getItem('accessToken');
+
+    // 토큰이 없으면 로그인 필요 알림
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    // 로그인 되어 있을 경우 AI 여행 일정 생성 모달 열기
+    handleOpenTravelPlanModal();
+  };
+
   const locations = [
     '서울',
     '부산',
@@ -155,11 +181,11 @@ const Header = () => {
             ↓↓ 글을 클릭하여 사용해보세요.
           </Title>
           <ButtonContainer>
-            <Button onClick={handleOpenPlacesModal}>
+            <Button onClick={handlePlacesClick}>
               지역 관광지/맛집 목록보기
             </Button>
             <Button
-              onClick={handleOpenTravelPlanModal}
+              onClick={handleTravelPlanClick}
               style={{ marginLeft: '10px' }}
             >
               AI 여행 일정 짜줘
