@@ -90,7 +90,7 @@ const Header = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/travel', {
+      const response = await fetch('https://xn--9r2b17b.shop/travel', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ const Header = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/openAi', {
+      const response = await fetch('https://xn--9r2b17b.shop/openAi', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
