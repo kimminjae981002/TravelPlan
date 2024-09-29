@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
 import { JwtStrategy } from './jwt.strategy';
 import { UserModule } from '../user/user.module';
-import { BoardModule } from '../board/board.module';
 
 @Module({
   imports: [
