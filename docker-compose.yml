@@ -1,15 +1,17 @@
-version: '3'
 services:
   app:
     build:
       context: ./
+      dockerfile: Dockerfile
     image: minjae981002/blog-api-app:latest
     ports:
-      - '3000:3000'
-    env_file: # 수정된 부분
-      - .env # .env 파일을 추가
+      - '3000'
+    env_file:
+      - .env
     depends_on:
       - db
+    networks:
+      - blog-net # 추가된 네트워크
 
   db:
     image: mysql:5.7
@@ -19,3 +21,55 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - '3306:3306'
+    networks:
+      - blog-net # 추가된 네트워크
+
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt/live/xn--9r2b17b.shop:/etc/letsencrypt/live/xn--9r2b17b.shop
+      - /etc/letsencrypt/archive/xn--9r2b17b.shop:/etc/letsencrypt/archive/xn--9r2b17b.shop     
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - app
+    networks:
+      - blog-net
+
+
+networks:
+   blog-net:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
