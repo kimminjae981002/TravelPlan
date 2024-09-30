@@ -6,7 +6,7 @@ export const fetchTravelPlan = async (location, duration, who, season) => {
   }
 
   const token = localStorage.getItem('accessToken');
-  const url = 'http://localhost:3000/openAi';
+  const url = 'https://main--kimminjae98.netlify.app/openAi';
   const options = {
     method: 'POST',
     headers: {

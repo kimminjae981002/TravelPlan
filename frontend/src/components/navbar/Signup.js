@@ -22,13 +22,16 @@ const Signup = ({ show, handleClose }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:3000/user/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'https://main--kimminjae98.netlify.app/user/signup',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
         },
-        body: JSON.stringify(userData),
-      });
+      );
 
       if (response.ok) {
         alert('회원가입 성공!');

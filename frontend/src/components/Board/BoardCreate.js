@@ -19,7 +19,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
       formData.append('image', image);
     }
 
-    const url = 'http://localhost:3000/board';
+    const url = 'https://main--kimminjae98.netlify.app/board';
     const options = {
       method: 'POST',
       body: formData,

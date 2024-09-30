@@ -77,12 +77,28 @@ const Header = () => {
   return (
     <>
       <StyleHeader>
-        <Logo src="https://images.unsplash.com/photo-1468818438311-4bab781ab9b8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fCVFQyU5NyVBQyVFRCU5NiU4OXxlbnwwfHwwfHx8MA%3D%3D" />
+        <Logo src="https://plus.unsplash.com/premium_photo-1684407617181-275e50374e95?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dHJpcHxlbnwwfHwwfHx8MA%3D%3D" />
         <div>
           <Title>
-            AI를 이용하여 여행을 계획 해 드릴게요.
-            <br />
-            ↓↓ 글을 클릭하여 사용해보세요.
+            <div
+              style={{
+                marginBottom: '3px',
+                padding: '5px 5px',
+                color: 'rgba(0, 133, 223, 0.84)',
+                backgroundColor: 'rgba(0, 133, 223, 0.11)',
+                borderRadius: '5px',
+                display: 'inline-block',
+                fontWeight: 'bold',
+              }}
+            >
+              TravelPlan
+            </div>
+            <div style={{ marginTop: '10px' }}>
+              AI를 이용하여 여행을 계획 해 드릴게요.
+            </div>
+            <div style={{ marginTop: '10px' }}>
+              ↓ 글을 클릭하여 사용해보세요. ↓
+            </div>
           </Title>
           <ButtonContainer>
             <Button onClick={handlePlacesClick}>

@@ -10,7 +10,7 @@ export const fetchPlaces = async (selectedLocation, setSelectedCategory) => {
     throw new Error('로그인이 필요합니다.');
   }
 
-  const url = 'http://localhost:3000/travel';
+  const url = 'https://main--kimminjae98.netlify.app/travel';
   const options = {
     method: 'POST',
     headers: {

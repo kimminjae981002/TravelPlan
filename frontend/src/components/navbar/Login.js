@@ -16,14 +16,17 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:3000/user/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'https://main--kimminjae98.netlify.app/user/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+          credentials: 'include',
         },
-        body: JSON.stringify(userData),
-        credentials: 'include',
-      });
+      );
 
       if (response.ok) {
         const data = await response.json();

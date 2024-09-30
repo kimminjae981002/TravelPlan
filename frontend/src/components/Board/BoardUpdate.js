@@ -10,7 +10,9 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   useEffect(() => {
     const fetchBoard = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/board/${boardId}`);
+        const response = await fetch(
+          `https://main--kimminjae98.netlify.app/${boardId}`,
+        );
         if (!response.ok) throw new Error('게시글을 찾을 수 없습니다.');
         const data = await response.json();
         setEditTitle(data.title);
@@ -29,7 +31,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
     formData.append('title', editTitle);
     formData.append('content', editContent);
 
-    const url = `http://localhost:3000/board/${boardId}`;
+    const url = `https://main--kimminjae98.netlify.app/${boardId}`;
     const options = {
       method: 'PATCH',
       headers: {

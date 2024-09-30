@@ -42,7 +42,9 @@ const BoardDetail = ({ setBoards }) => {
 
   const fetchBoard = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:3000/board/${id}`);
+      const response = await fetch(
+        `https://main--kimminjae98.netlify.app/${id}`,
+      );
       if (!response.ok) {
         throw new Error('게시글을 찾을 수 없습니다.');
       }

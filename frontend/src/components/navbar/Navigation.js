@@ -51,7 +51,7 @@ const Navigation = () => {
         collapseOnSelect
         expand="lg"
         style={{
-          borderBottom: '1px solid grey',
+          borderBottom: '1px solid rgba(0, 133, 223, 0.44)',
         }}
       >
         <Container>
