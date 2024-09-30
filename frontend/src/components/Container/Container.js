@@ -28,7 +28,7 @@ const BoardContainer = () => {
 
     // 현재 액세스 토큰을 사용하여 게시글 조회를 시도
     const response = await performRequest(
-      `https://main--kimminjae98.netlify.app/${id}`,
+      `https://xn--9r2b17b.shop/board/${id}`,
       {
         method: 'GET',
         headers: {
@@ -55,12 +55,9 @@ const BoardContainer = () => {
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const response = await fetch(
-          'https://main--kimminjae98.netlify.app/board',
-          {
-            method: 'GET',
-          },
-        );
+        const response = await fetch('https://xn--9r2b17b.shop/board', {
+          method: 'GET',
+        });
 
         if (!response.ok) {
           throw new Error('Error fetching posts');

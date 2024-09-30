@@ -4,7 +4,7 @@ export const performRequest = async (url, options, formData = null) => {
   // 엑세스 토큰이 만료되면 리프레쉬 토큰을 통한 재발급
   if (!response.ok && response.status === 401) {
     const refreshResponse = await fetch(
-      'https://main--kimminjae98.netlify.app/user/refresh-token',
+      'https://xn--9r2b17b.shop/user/refresh-token',
       {
         method: 'POST',
         credentials: 'include',
