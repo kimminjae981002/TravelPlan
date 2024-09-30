@@ -12,6 +12,8 @@ services:
       - .env
     depends_on:
       - db
+    networks:
+      - blog-net # 추가된 네트워크
 
   db:
     image: mysql:5.7
@@ -21,6 +23,8 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - '3306:3306'
+    networks:
+      - blog-net # 추가된 네트워크
 
   nginx:
     image: nginx:latest
@@ -33,7 +37,7 @@ services:
     depends_on:
       - app
     networks:
-      - blog-net # 추가한 네트워크
+      - blog-net # 추가된 네트워크
 
 networks:
   blog-net: # 네트워크 정의
