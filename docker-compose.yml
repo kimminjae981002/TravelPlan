@@ -7,18 +7,11 @@ services:
       dockerfile: Dockerfile
     image: minjae981002/blog-api-app:latest
     ports:
-      - '3000' # 외부로 노출할 필요는 없지만, 내부 통신을 위해 열어둘 수 있음
+      - '3000'
     env_file:
       - .env
     depends_on:
       - db
-    deploy:
-      replicas: 3 # 앱의 인스턴스 수
-      update_config:
-        parallelism: 1 # 한 번에 업데이트할 인스턴스 수
-        delay: 10s # 업데이트 간의 지연 시간
-      restart_policy:
-        condition: on-failure
 
   db:
     image: mysql:5.7
@@ -32,10 +25,15 @@ services:
   nginx:
     image: nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf # Nginx 설정 파일
-      - ./certs:/etc/letsencrypt # SSL 인증서 경로 (여기서 SSL 인증서 경로 설정)
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./certs:/etc/letsencrypt
     ports:
-      - '80:80' # HTTP 포트
-      - '443:443' # HTTPS 포트
+      - '80:80'
+      - '443:443'
     depends_on:
       - app
+    networks:
+      - blog-net # 별도의 네트워크 생성
+
+networks:
+  blog-net:
