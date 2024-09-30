@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { CenteredModal } from '../Styles/Common/Common.style';
+import { CenteredModal } from '../Common/Common.style';
 
 // Navigation.js에서 파라미터를 받아온다.
 const Signup = ({ show, handleClose }) => {
@@ -13,7 +13,7 @@ const Signup = ({ show, handleClose }) => {
   const [name, setName] = useState('');
 
   const handleSignup = async () => {
-    // 정보
+    // 회원가입 유저 input
     const userData = {
       username: username.trim(),
       password: password.trim(),
@@ -22,7 +22,7 @@ const Signup = ({ show, handleClose }) => {
     };
 
     try {
-      const response = await fetch('https://xn--9r2b17b.shop/user/signup', {
+      const response = await fetch('http://localhost:3000/user/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

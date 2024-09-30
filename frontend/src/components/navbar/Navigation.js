@@ -47,9 +47,25 @@ const Navigation = () => {
 
   return (
     <>
-      <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
+      <Navbar
+        collapseOnSelect
+        expand="lg"
+        style={{
+          borderBottom: '1px solid grey',
+        }}
+      >
         <Container>
-          <Navbar.Brand href="/">MJBlog</Navbar.Brand>
+          <Navbar.Brand href="/">
+            <img
+              src="https://files.logomakr.com/4Om7eB-LogoMakr.png" // 로고 이미지 URL
+              alt="Logo"
+              style={{
+                width: '130px', // 이미지 크기 조정
+                height: '40px', // 이미지 크기 조정
+                marginRight: '10px', // 텍스트와의 간격 조정
+              }}
+            />
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>

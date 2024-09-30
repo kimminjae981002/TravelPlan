@@ -24,7 +24,6 @@ export const Image = styled.img`
   max-height: 400px;
   object-fit: contain;
   margin-bottom: 20px;
-  border-radius: 10px;
 `;
 
 export const Content = styled.p`

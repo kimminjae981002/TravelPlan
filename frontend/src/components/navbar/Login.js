@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { CenteredModal } from '../Styles/Common/Common.style';
+import { CenteredModal } from '../Common/Common.style';
 
 const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
   const [username, setUsername] = useState('');
@@ -16,7 +16,7 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
     };
 
     try {
-      const response = await fetch('https://xn--9r2b17b.shop/user/login', {
+      const response = await fetch('http://localhost:3000/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

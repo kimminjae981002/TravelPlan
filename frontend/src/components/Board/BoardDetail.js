@@ -42,7 +42,7 @@ const BoardDetail = ({ setBoards }) => {
 
   const fetchBoard = useCallback(async () => {
     try {
-      const response = await fetch(`https://xn--9r2b17b.shop/board/${id}`);
+      const response = await fetch(`http://localhost:3000/board/${id}`);
       if (!response.ok) {
         throw new Error('게시글을 찾을 수 없습니다.');
       }
@@ -106,7 +106,13 @@ const BoardDetail = ({ setBoards }) => {
       </div>
 
       {board.image && <Image src={board.image} />}
-      <Content>{board.content}</Content>
+      <div>
+        <Content
+          dangerouslySetInnerHTML={{
+            __html: board.content.replace(/\n/g, '<br />'), // 줄바꿈을 <br />로 변환
+          }}
+        />
+      </div>
 
       {/* 게시글 수정 */}
       <BoardUpdate

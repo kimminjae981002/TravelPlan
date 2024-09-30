@@ -10,9 +10,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
   useEffect(() => {
     const fetchBoard = async () => {
       try {
-        const response = await fetch(
-          `https://xn--9r2b17b.shop/board/${boardId}`,
-        );
+        const response = await fetch(`http://localhost:3000/board/${boardId}`);
         if (!response.ok) throw new Error('게시글을 찾을 수 없습니다.');
         const data = await response.json();
         setEditTitle(data.title);
@@ -31,7 +29,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
     formData.append('title', editTitle);
     formData.append('content', editContent);
 
-    const url = `https://xn--9r2b17b.shop/board/${boardId}`;
+    const url = `http://localhost:3000/board/${boardId}`;
     const options = {
       method: 'PATCH',
       headers: {
@@ -89,7 +87,15 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
           </Form.Group>
 
           <div style={{ marginTop: '10px' }}>
-            <Button variant="primary" type="submit">
+            <Button
+              variant="primary"
+              type="submit"
+              style={{
+                background: 'none',
+                color: 'grey',
+                border: 'none',
+              }}
+            >
               수정하기
             </Button>
           </div>

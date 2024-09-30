@@ -27,15 +27,12 @@ const BoardContainer = () => {
     }
 
     // 현재 액세스 토큰을 사용하여 게시글 조회를 시도
-    const response = await performRequest(
-      `https://xn--9r2b17b.shop/board/${id}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await performRequest(`http://localhost:3000/board/${id}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
 
     if (response && response.ok) {
       // 액세스 토큰이 유효한 경우 바로 게시글로 이동
@@ -55,7 +52,7 @@ const BoardContainer = () => {
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const response = await fetch('https://xn--9r2b17b.shop/board', {
+        const response = await fetch('http://localhost:3000/board', {
           method: 'GET',
         });
 

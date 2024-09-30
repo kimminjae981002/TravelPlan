@@ -13,170 +13,74 @@ import {
   SubmitButton,
   CancelButton,
 } from './Header.style';
+import { locations } from '../Common/Common';
+import { fetchPlaces } from '../Travel/Travel';
+import { fetchTravelPlan } from '../Open-ai/Open-ai';
 
 const Header = () => {
   const [isPlacesModalOpen, setIsPlacesModalOpen] = useState(false);
   const [isTravelPlanModalOpen, setIsTravelPlanModalOpen] = useState(false);
-  const [location, setLocation] = useState('');
-  const [category, setCategory] = useState('관광지'); // 기본 카테고리 설정
-  const [duration, setDuration] = useState(''); // 기간
-  const [who, setWho] = useState('가족'); // 구성원
-  const [season, setSeason] = useState(''); // 계절
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [duration, setDuration] = useState('');
+  const [who, setWho] = useState('');
+  const [season, setSeason] = useState('');
 
   const handleOpenPlacesModal = () => setIsPlacesModalOpen(true);
   const handleClosePlacesModal = () => setIsPlacesModalOpen(false);
   const handleOpenTravelPlanModal = () => setIsTravelPlanModalOpen(true);
   const handleCloseTravelPlanModal = () => setIsTravelPlanModalOpen(false);
 
-  const handlePlacesClick = async () => {
+  const handlePlacesClick = () => {
     const token = localStorage.getItem('accessToken');
-
-    // 토큰이 없으면 로그인 필요 알림
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
     }
-
-    // 로그인 되어 있을 경우 지역 관광지/맛집 모달 열기
     handleOpenPlacesModal();
   };
 
-  const handleTravelPlanClick = async () => {
+  const handleTravelPlanClick = () => {
     const token = localStorage.getItem('accessToken');
-
-    // 토큰이 없으면 로그인 필요 알림
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
     }
-
-    // 로그인 되어 있을 경우 AI 여행 일정 생성 모달 열기
     handleOpenTravelPlanModal();
   };
 
-  const locations = [
-    '서울',
-    '부산',
-    '대구',
-    '인천',
-    '광주',
-    '대전',
-    '울산',
-    '수원',
-    '고양',
-    '용인',
-    '성남',
-    '안양',
-    '부천',
-    '춘천',
-    '강릉',
-    '원주',
-    '동해',
-    '청주',
-    '음성',
-    '진천',
-    '제천',
-    '단양',
-    '천안',
-    '공주',
-    '논산',
-    '서산',
-    '보령',
-    '전주',
-    '군산',
-    '익산',
-    '정읍',
-    '남원',
-    '김제',
-    '광양',
-    '여수',
-    '순천',
-    '목포',
-    '나주',
-    '포항',
-    '구미',
-    '경주',
-    '영주',
-    '안동',
-    '창원',
-    '김해',
-    '양산',
-    '진주',
-    '거제',
-    '제주',
-    '서귀포',
-  ];
-
-  const seasons = ['봄', '여름', '가을', '겨울'];
-
-  const handleSubmit = async () => {
-    if (!location) {
-      alert('지역을 선택해주세요.');
-      return;
-    }
-
+  // 장소 추천
+  const handlePlacesSubmit = async () => {
     try {
-      const response = await fetch('https://xn--9r2b17b.shop/travel', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        body: JSON.stringify({ keyword: `${location} ${category}` }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        const places = data.data.join('\n');
-        alert(places); // 추천 장소 출력
-      } else {
-        alert('오류 발생: ' + data.message);
-      }
+      const places = await fetchPlaces(selectedLocation, selectedCategory); // renamed
+      alert(places); // 추천 장소 출력
     } catch (error) {
-      console.error('API 호출 중 오류 발생:', error);
-      alert('API 호출 중 오류가 발생했습니다.');
+      alert('오류 발생: ' + error.message);
     }
   };
 
+  // 여행 계획
   const handleTravelPlanSubmit = async () => {
-    if (!location || !duration || !who || !season) {
-      alert('모든 정보를 입력해주세요.');
-      return;
-    }
-
     try {
-      const response = await fetch('https://xn--9r2b17b.shop/openAi', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        body: JSON.stringify({ destination: location, duration, who, season }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        alert(data.data); // 여행 일정 출력
-      } else {
-        alert('오류 발생: ' + data.message);
-      }
+      const travelPlan = await fetchTravelPlan(
+        selectedLocation,
+        duration,
+        who,
+        season,
+      );
+      alert(travelPlan);
     } catch (error) {
-      console.error('API 호출 중 오류 발생:', error);
-      alert('API 호출 중 오류가 발생했습니다.');
+      alert('오류 발생: ' + error.message);
     }
   };
 
   return (
     <>
       <StyleHeader>
-        <Logo
-          src="https://plus.unsplash.com/premium_photo-1661944456241-c920f93bd87b?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8JUVDJTk3JUFDJUVEJTk2JTg5fGVufDB8fDB8fHww"
-          alt="로고"
-        />
+        <Logo src="https://images.unsplash.com/photo-1468818438311-4bab781ab9b8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fCVFQyU5NyVBQyVFRCU5NiU4OXxlbnwwfHwwfHx8MA%3D%3D" />
         <div>
           <Title>
-            AI를 이용하여 자동으로 여행을 계획 해 드릴게요.
+            AI를 이용하여 여행을 계획 해 드릴게요.
             <br />
             ↓↓ 글을 클릭하여 사용해보세요.
           </Title>
@@ -203,8 +107,8 @@ const Header = () => {
             <div>
               <h4>지역 선택</h4>
               <Select
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={selectedLocation} // renamed
+                onChange={(e) => setSelectedLocation(e.target.value)} // renamed
               >
                 <option value="">지역을 선택하세요</option>
                 {locations.map((loc) => (
@@ -217,15 +121,14 @@ const Header = () => {
             <div>
               <h4>카테고리 선택</h4>
               <Select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                value={selectedCategory} // renamed
+                onChange={(e) => setSelectedCategory(e.target.value)} // renamed
               >
                 <option value="관광지">관광지</option>
                 <option value="맛집">맛집</option>
               </Select>
             </div>
-
-            <SubmitButton onClick={handleSubmit}>추천받기</SubmitButton>
+            <SubmitButton onClick={handlePlacesSubmit}>추천받기</SubmitButton>
             <CancelButton onClick={handleClosePlacesModal}>
               안 받을래요..
             </CancelButton>
@@ -242,8 +145,8 @@ const Header = () => {
             <div>
               <h4>지역 선택</h4>
               <Select
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={selectedLocation} // renamed
+                onChange={(e) => setSelectedLocation(e.target.value)} // renamed
               >
                 <option value="">지역을 선택하세요</option>
                 {locations.map((loc) => (
@@ -270,6 +173,7 @@ const Header = () => {
             <div>
               <h4>구성원</h4>
               <Select value={who} onChange={(e) => setWho(e.target.value)}>
+                <option value="">구성원을 선택하세요</option>
                 <option value="가족">가족</option>
                 <option value="친구">친구</option>
                 <option value="혼자">혼자</option>
@@ -283,14 +187,12 @@ const Header = () => {
                 onChange={(e) => setSeason(e.target.value)}
               >
                 <option value="">계절을 선택하세요</option>
-                {seasons.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
+                <option value="봄">봄</option>
+                <option value="여름">여름</option>
+                <option value="가을">가을</option>
+                <option value="겨울">겨울</option>
               </Select>
             </div>
-
             <SubmitButton onClick={handleTravelPlanSubmit}>
               일정 만들기
             </SubmitButton>

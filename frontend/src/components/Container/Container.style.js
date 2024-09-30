@@ -3,19 +3,24 @@ import styled from 'styled-components';
 export const Container = styled.div`
   width: 100%;
   height: 70vh;
-  margin-top: 300px;
+  margin: 20rem 10rem 10rem 0;
   background-color: white;
   color: black;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 0 300px;
+  padding: 2rem;
+
+  @media (max-width: 480px) {
+    padding: 0;
+    margin: 15rem 15rem 15rem 0;
+  }
 `;
 
 export const BoardCard = styled.div`
   width: calc(25% - 40px);
   height: calc(60.33% - 100px);
-  margin: 30px;
+  margin: 20px;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -23,32 +28,30 @@ export const BoardCard = styled.div`
   cursor: pointer;
   aspect-ratio: 1;
 
-  @media (max-width: 1700px) {
+  @media (max-width: 1800px) {
     width: calc(33.33% - 40px);
     font-size: 0.9em;
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1300px) {
     width: calc(50% - 40px);
     font-size: 0.85em;
   }
 
-  @media (max-width: 800px) {
-    width: 500px;
+  @media (max-width: 1000px) {
+    width: 30rem;
     font-size: 0.8em;
   }
 
   @media (max-width: 580px) {
-    width: 400px;
-    display: flex;
-    justify-content: center;
+    width: 25rem;
     font-size: 0.8em;
   }
 
   @media (max-width: 480px) {
     width: 25rem;
-    font-size: 0.8em;
-    margin-right: 13rem;
+    font-size: 0.5em;
+    margin-bottom: 3rem;
   }
 `;
 

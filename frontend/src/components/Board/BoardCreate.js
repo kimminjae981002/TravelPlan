@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { CenteredModal } from '../Styles/Common/Common.style';
+import { CenteredModal } from '../Common/Common.style';
 import { performRequest } from '../RefreshToken/RefreshToken';
 
 const Board = ({ show, handleClose, isLoggedIn }) => {
@@ -19,7 +19,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
       formData.append('image', image);
     }
 
-    const url = 'https://xn--9r2b17b.shop/board';
+    const url = 'http://localhost:3000/board';
     const options = {
       method: 'POST',
       body: formData,
@@ -87,7 +87,15 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
             />
           </Form.Group>
           <div style={{ marginTop: '10px' }}>
-            <Button variant="primary" type="submit">
+            <Button
+              variant="primary"
+              type="submit"
+              style={{
+                background: 'none',
+                color: 'grey',
+                border: 'none',
+              }}
+            >
               작성하기
             </Button>
           </div>

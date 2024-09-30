@@ -7,15 +7,20 @@ export const StyleHeader = styled.section`
   position: absolute;
   width: 100%;
   height: 25%;
-  background-color: rgba(200, 200, 200, 200);
+  background-color: white;
+  border-radius: 10px;
   padding: 0 20px;
 `;
 
 export const Logo = styled.img`
-  width: 23%;
+  width: 25%;
   height: 70%;
   margin-right: 20px;
   border-radius: 10px;
+
+  @media (max-width: 600px) {
+    width: 50%;
+  }
 `;
 
 export const Content = styled.div`
@@ -23,12 +28,20 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
+
+  @media (max-width: 600px) {
+    font-size: 0.5rem;
+  }
 `;
 
 export const Title = styled.h1`
   font-size: 18px;
   margin: 0;
-  color: white;
+  color: black;
+
+  @media (max-width: 600px) {
+    font-size: 0.8rem;
+  }
 `;
 
 export const ButtonContainer = styled.div`
@@ -42,6 +55,10 @@ export const Button = styled.button`
   color: grey;
   border: none;
   cursor: pointer;
+
+  @media (max-width: 600px) {
+    font-size: 0.8rem;
+  }
 
   &:hover {
     color: black;
