@@ -52,8 +52,8 @@ async function bootstrap() {
 
   // Swagger 설정
   const config = new DocumentBuilder()
-    .setTitle('Blog API Project ')
-    .setDescription('Blog API')
+    .setTitle('TravelPlan API Project ')
+    .setDescription('TravelPlan')
     .setVersion('1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
