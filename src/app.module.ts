@@ -1,24 +1,24 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-
+import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { typeOrmModuleAsyncOptions } from './configs/database.config';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { configModuleValidationSchema } from './configs/env-validation.config';
 import { BoardModule } from './board/board.module';
+import { TravelModule } from './travel/travel.module';
+import { OpenAiModule } from './open-ai/open-ai.module';
+
 @Module({
   imports: [
-    // 환경변수 로딩
     ConfigModule.forRoot({
       isGlobal: true,
-      validationSchema: configModuleValidationSchema,
     }),
-    // typeorm 설정
     TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions),
     AuthModule,
     UserModule,
     BoardModule,
+    TravelModule,
+    OpenAiModule,
   ],
   controllers: [],
   providers: [],

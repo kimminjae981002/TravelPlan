@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -20,23 +21,29 @@ import { User } from '../user/user.entity';
 import { PaginateBoardDto } from '../common/dto/paginate.dto';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Boards')
 @Controller('board')
-@UseInterceptors(AuthInterceptor)
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
   /**
-   * 리뷰 작성
+   * 게시글 작성
    * @param createBoardDto 제목, 내용
-   * @param userId 유저아이디
+   * @param username 유저아이디
    * @param name 닉네임
+   * @param file 이미지 파일
    * @returns
    */
   @Post()
+  @UseInterceptors(FileInterceptor('image'), AuthInterceptor) // 이미지 업로드 처리
   @UseGuards(JwtAuthGuard)
-  async create(@UserInfo() user: User, @Body() createBoardDto: CreateBoardDto) {
+  async create(
+    @UserInfo() user: User,
+    @Body() createBoardDto: CreateBoardDto,
+    @UploadedFile() file: Express.MulterS3.File,
+  ) {
     const { title } = createBoardDto;
 
     if (title.trim() === '') {
@@ -46,12 +53,23 @@ export class BoardController {
       });
     }
 
-    await this.boardService.create(createBoardDto, user.name);
+    let imagePath = null;
+
+    if (file) {
+      imagePath = await this.boardService.uploadFile(file); // S3에 업로드 후 URL 반환
+    }
+
+    await this.boardService.create(
+      createBoardDto,
+      user.name,
+      imagePath,
+      user.id,
+    );
+
     return { success: true, message: 'okay' };
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async findAll(@Query() query: PaginateBoardDto) {
     const { boards } = await this.boardService.findAll(query);
 
@@ -63,12 +81,12 @@ export class BoardController {
   }
 
   @Get(':boardId')
-  @UseGuards(JwtAuthGuard)
   async findOne(@Param('boardId') boardId: number) {
     return await this.boardService.findOne(boardId);
   }
 
   @Patch(':boardId')
+  @UseInterceptors(FileInterceptor('image'), AuthInterceptor)
   async updateBoard(
     @Param('boardId') boardId: number,
     @Body() updateBoardDto: UpdateBoardDto,
@@ -86,6 +104,7 @@ export class BoardController {
   }
 
   @Delete(':boardId')
+  @UseInterceptors(FileInterceptor('image'), AuthInterceptor)
   @UseGuards(JwtAuthGuard)
   async deleteBoard(@Param('boardId') boardId: number) {
     await this.boardService.deleteBoard(boardId);

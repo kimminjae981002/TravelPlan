@@ -6,15 +6,50 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { PaginateBoardDto } from '../common/dto/paginate.dto';
 import moment from 'moment-timezone';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class BoardService {
+  private s3Client: S3Client;
   constructor(
     @InjectRepository(Board)
     private readonly boardRepository: Repository<Board>,
-  ) {}
+  ) {
+    this.s3Client = new S3Client({
+      region: process.env.MY_AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+      },
+    });
+  }
 
-  async create(createBoardDto: CreateBoardDto, name: string) {
+  // S3에 파일 업로드 메서드
+  async uploadFile(file: Express.Multer.File): Promise<string> {
+    const uploadParams = {
+      Bucket: 'blog-image-s3',
+      Key: `${Date.now().toString()}-${file.originalname}`,
+      Body: file.buffer, // 파일의 버퍼
+      ContentType: file.mimetype,
+    };
+
+    try {
+      const command = new PutObjectCommand(uploadParams);
+      await this.s3Client.send(command);
+      // S3에서의 파일 URL 반환
+      return `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      throw new Error('파일 업로드에 실패했습니다.');
+    }
+  }
+
+  async create(
+    createBoardDto: CreateBoardDto,
+    name: string,
+    image?: string,
+    userId?: number,
+  ) {
     const { title, content } = createBoardDto;
     const createdAt = new Date().toLocaleString('en-US', {
       timeZone: 'Asia/Seoul',
@@ -25,6 +60,8 @@ export class BoardService {
       content,
       createdAt,
       userName: name,
+      image,
+      user: { id: userId },
     });
 
     await this.boardRepository.save(newBoard);
@@ -38,6 +75,8 @@ export class BoardService {
         'b.title',
         'b.content',
         'b.userName',
+        'b.image',
+        'b.userId',
         'b.createdAt',
         'b.updatedAt',
       ])
@@ -58,6 +97,7 @@ export class BoardService {
         updatedAt: moment(board.updatedAt)
           .tz('Asia/Seoul')
           .format('YYYY-MM-DD HH:mm:ss'),
+        image: board.image,
       })),
 
       totalCount,
@@ -67,7 +107,16 @@ export class BoardService {
   async findOne(@Param('boardId') boardId: number) {
     const board = await this.boardRepository
       .createQueryBuilder('b')
-      .select(['b.id', 'b.title', 'b.content', 'b.userName', 'b.createdAt'])
+      .select([
+        'b.id',
+        'b.title',
+        'b.content',
+        'b.userName',
+        'b.image',
+        'b.userId',
+        'b.createdAt',
+        'b.updatedAt',
+      ])
       .where('b.id = :boardId', { boardId })
       .getOne();
 
@@ -86,6 +135,8 @@ export class BoardService {
       updatedAt: moment(board.updatedAt)
         .tz('Asia/Seoul')
         .format('YYYY-MM-DD HH:mm:ss'),
+      image: board.image,
+      userId: board.userId,
     };
   }
 
@@ -103,6 +154,7 @@ export class BoardService {
 
     board.title = updateBoardDto.title || board.title;
     board.content = updateBoardDto.content || board.content;
+    board.image = updateBoardDto.image || board.image;
 
     return this.boardRepository.save(board);
   }
@@ -115,7 +167,6 @@ export class BoardService {
     if (!board) {
       throw new NotFoundException(`${boardId} 게시글을 찾을 수 없습니다.`);
     }
-
-    return await this.boardRepository.delete(board);
+    return await this.boardRepository.delete(board.id);
   }
 }

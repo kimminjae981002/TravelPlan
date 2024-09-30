@@ -10,17 +10,17 @@ export class LoginUserDto {
   @ApiProperty({
     description: '유저 ID',
     required: true,
-    example: 'ididid',
+    example: 'testid',
   })
   @MinLength(4)
   @MaxLength(20)
   @IsNotEmpty({ message: 'ID를 작성해주세요.' })
-  userId: string;
+  username: string;
 
   @ApiProperty({
     description: '비밀번호',
     required: true,
-    example: 'abc123456@',
+    example: 'abc123456',
   })
   @IsNotEmpty({ message: '비밀번호를 작성해주세요.' })
   @MaxLength(20)

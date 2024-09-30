@@ -5,21 +5,23 @@ import {
   ConflictException,
   Controller,
   Post,
+  Req,
   Res,
   UnauthorizedException,
-  UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { AuthInterceptor } from '../auth/auth.interceptor';
-
+import { AuthService } from '../auth/auth.service';
 @ApiTags('USER')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   /**
    * 회원가입
@@ -29,13 +31,12 @@ export class UserController {
 
   @Post('signup')
   async create(@Body() createUserDto: CreateUserDto) {
-    const { userId, password, passwordCheck, name } = createUserDto;
+    const { username, password, passwordCheck, name } = createUserDto;
 
     const user = await this.userService.findUserByName(name);
 
-    const existingUser = await this.userService.findUserByUserId(userId);
+    const existingUser = await this.userService.findUserByUsername(username);
 
-    // 이미 존재하는 사용자 처리
     if (existingUser) {
       throw new ConflictException(
         '이미 해당 아이디로 등록된 사용자가 있습니다.',
@@ -70,22 +71,23 @@ export class UserController {
    */
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
-    const { userId, password } = loginUserDto;
+    const { username, password } = loginUserDto;
 
-    const user = await this.userService.findUserByUserId(userId);
+    const user = await this.userService.findUserByUsername(username);
 
     if (!user)
       throw new UnauthorizedException('아이디 또는 비밀번호가 틀렸습니다.');
 
     const { accessToken, refreshToken } = await this.userService.login(
-      userId,
+      username,
       password,
     );
 
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: 'none',
     });
 
     return res.json({
@@ -93,5 +95,26 @@ export class UserController {
       message: 'okay',
       accessToken,
     });
+  }
+
+  /**
+   * 리프레쉬토큰
+   * @returns
+   */
+  @Post('refresh-token')
+  async refreshToken(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.cookies['jwt'];
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('리프레시 토큰이 없습니다.');
+    }
+
+    try {
+      const newAccessToken =
+        await this.authService.refreshAccessToken(refreshToken);
+      return res.json({ accessToken: newAccessToken });
+    } catch (error) {
+      throw new UnauthorizedException('리프레시 토큰이 유효하지 않습니다.');
+    }
   }
 }

@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { compareSync, hashSync } from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -22,14 +23,15 @@ export class UserService {
 
   // 회원가입
   async createUser(createUserDto: CreateUserDto) {
-    const { userId, password, name } = createUserDto;
+    const { username, password, name } = createUserDto;
 
     try {
-      const hashRound = this.configService.get<number>('HASH_ROUNDS');
-      const hashPassword = hashSync(password, hashRound);
+      const hashRounds = this.configService.get<number>('HASH_ROUNDS');
+      const salt = await bcrypt.genSalt(+hashRounds);
+      const hashPassword = await bcrypt.hash(password, salt);
 
       await this.userRepository.save({
-        userId,
+        username,
         password: hashPassword,
         name,
       });
@@ -44,8 +46,8 @@ export class UserService {
   }
 
   // 로그인
-  async login(userId: string, password: string) {
-    const user = await this.findUserByUserId(userId);
+  async login(username: string, password: string) {
+    const user = await this.findUserByUsername(username);
 
     if (!compareSync(password, user?.password ?? ''))
       throw new UnauthorizedException('비밀번호가 틀렸습니다.');
@@ -70,17 +72,15 @@ export class UserService {
       refreshToken,
     };
   }
-  // 유저의 id 찾기
+
   async findUserById(id: number) {
     return await this.userRepository.findOneBy({ id });
   }
 
-  // 유저의 유저ID 찾기
-  async findUserByUserId(userId: string) {
-    return await this.userRepository.findOneBy({ userId });
+  async findUserByUsername(username: string) {
+    return await this.userRepository.findOneBy({ username });
   }
 
-  // 유저의 유저 이름 찾기
   async findUserByName(name: string) {
     return await this.userRepository.findOneBy({ name });
   }

@@ -25,18 +25,26 @@ services:
       - blog-net # 추가된 네트워크
 
 
+
+
+
   nginx:
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
       - /etc/letsencrypt/live/xn--9r2b17b.shop:/etc/letsencrypt/live/xn--9r2b17b.shop
       - /etc/letsencrypt/archive/xn--9r2b17b.shop:/etc/letsencrypt/archive/xn--9r2b17b.shop     
+
+      - ./certs:/etc/letsencrypt
+
     ports:
       - '80:80'
       - '443:443'
     depends_on:
       - app
     networks:
+
       - blog-net
 
 
@@ -73,3 +81,9 @@ networks:
 
 
 
+=======
+      - blog-net # 추가된 네트워크
+
+networks:
+  blog-net: # 네트워크 정의
+>>>>>>> 6ffb5bef4e93bbca3a92e316408197d5fe111a2e

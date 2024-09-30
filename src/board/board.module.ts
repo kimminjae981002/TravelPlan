@@ -6,9 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
+    MulterModule.register({
+      limits: {
+        fileSize: 5 * 1024 * 1024, // 파일 크기 제한 (예: 5MB)
+      },
+    }),
     TypeOrmModule.forFeature([Board]),
     forwardRef(() => AuthModule),
     forwardRef(() => UserModule),

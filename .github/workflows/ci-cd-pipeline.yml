@@ -1,5 +1,6 @@
 name: CI/CD Pipeline
 
+# main branch에 push or pr할 때 실행된다.
 on:
   push:
     branches:
@@ -24,29 +25,37 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+        # 도커 허브에 이미지 생성
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest .
 
+        # 도커 허브에 로그인
       - name: Docker Login
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
+        # 도커 허브에 내용 푸시
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
 
+        # EC2 KEY
       - name: Setup SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > keypair.pem
           chmod 600 keypair.pem
 
+        # EC2 도커 허브에 로그인 하고 PULL을 땡기고 중지된 컨테이너 삭제 후 컨테이너를 삭제하고 재배포한다.
       - name: Deploy to EC2
         run: |
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest || true"
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          CONTAINER_ID=\$(sudo docker ps -q --filter ancestor=${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest);
+          sudo docker container prune -f
+          sudo docker image prune -a -f
+          CONTAINER_ID=\$(sudo docker ps -q --filter 'publish=3000');
           if [ -n \"\$CONTAINER_ID\" ]; then
             sudo docker stop \$CONTAINER_ID;
             sudo docker rm \$CONTAINER_ID;
-          fi"
-          scp -i keypair.pem -o StrictHostKeyChecking=no .env ubuntu@${{ secrets.EC2_IP }}:~/.env
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 --env-file ~/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
+          fi
+           "
+
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 --env-file /home/ubuntu/Blog-API/.env  ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
