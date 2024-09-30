@@ -6,11 +6,7 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { PaginateBoardDto } from '../common/dto/paginate.dto';
 import moment from 'moment-timezone';
 import { UpdateBoardDto } from './dto/update-board.dto';
-import {
-  S3Client,
-  PutObjectCommand,
-  ObjectCannedACL,
-} from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class BoardService {

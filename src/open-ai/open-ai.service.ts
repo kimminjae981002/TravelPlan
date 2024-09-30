@@ -13,7 +13,7 @@ export class OpenAiService {
     private readonly configService: ConfigService,
   ) {}
 
-  async create(createOpenAiDto: CreateOpenAiDto, userId?: number) {
+  async create(createOpenAiDto: CreateOpenAiDto, userId: number) {
     let { destination, duration, who, season } = createOpenAiDto;
 
     const createdAt = new Date().toLocaleString('en-US', {

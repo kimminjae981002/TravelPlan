@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  HttpException,
+  HttpStatus,
   Post,
   UseGuards,
   UseInterceptors,
@@ -32,7 +34,7 @@ export class OpenAiController {
     try {
       const travelPlan = await this.openAiService.create(
         createOpenAiDto,
-        user.id,
+        +user.id,
       );
 
       return {

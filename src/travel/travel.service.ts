@@ -14,7 +14,7 @@ export class TravelService {
     private readonly configService: ConfigService,
   ) {}
 
-  async create(createTravelDto: CreateTravelDto, userId?: number) {
+  async create(createTravelDto: CreateTravelDto, userId: number) {
     let { keyword } = createTravelDto;
 
     const createdAt = new Date().toLocaleString('en-US', {
@@ -26,7 +26,7 @@ export class TravelService {
     const newTravel = this.travelRepository.create({
       keyword,
       createdAt,
-      user: { id: userId },
+      user: { id: userId }, // user 객체로 설정
     });
 
     await this.travelRepository.save(newTravel);
