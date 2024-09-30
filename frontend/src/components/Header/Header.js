@@ -213,7 +213,7 @@ const Header = () => {
               일정 만들기
             </SubmitButton>
             <CancelButton onClick={handleCloseTravelPlanModal}>
-              안 받을래요..
+              AI 못 믿겠어요..
             </CancelButton>
           </ModalContainer>
         </ModalOverlay>
