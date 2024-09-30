@@ -36,7 +36,7 @@ const BoardContainer = () => {
         },
       },
     );
-
+    console.log(response);
     if (response && response.ok) {
       // 액세스 토큰이 유효한 경우 바로 게시글로 이동
       navigate(`/board/${id}`);
