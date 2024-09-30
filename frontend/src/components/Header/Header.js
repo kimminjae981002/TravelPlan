@@ -94,7 +94,7 @@ const Header = () => {
               TravelPlan
             </div>
             <div style={{ marginTop: '10px' }}>
-              AI를 이용하여 여행을 계획 해 드릴게요.
+              AI를 이용하여 여행을 계획해 드릴게요.
             </div>
             <div style={{ marginTop: '10px' }}>
               ↓ 글을 클릭하여 사용해보세요. ↓

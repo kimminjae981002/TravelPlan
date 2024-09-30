@@ -7,10 +7,17 @@ services:
     image: minjae981002/blog-api-app:latest
     ports:
       - '3000:3000'
-    env_file: # 수정된 부분
-      - .env # .env 파일을 추가
+    env_file:
+      - .env
     depends_on:
       - db
+    deploy:
+      replicas: 2 # 인스턴스를 2개로 설정
+      update_config:
+        parallelism: 1 # 한 번에 하나의 인스턴스 업데이트
+        delay: 10s # 각 업데이트 사이의 지연 시간
+      restart_policy:
+        condition: on-failure # 실패 시에만 재시작
 
   db:
     image: mysql:5.7

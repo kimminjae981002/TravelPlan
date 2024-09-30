@@ -8,8 +8,8 @@ export const StyleHeader = styled.section`
   width: 100%;
   height: 25%;
   background-color: white;
-  border-radius: 10px;
   padding: 0 20px;
+  border-bottom: 1px solid rgba(0, 133, 223, 0.44);
 `;
 
 export const Logo = styled.img`
@@ -40,6 +40,7 @@ export const Title = styled.h1`
   color: black;
 
   @media (max-width: 600px) {
+    display: none;
     font-size: 0.8rem;
   }
 `;
