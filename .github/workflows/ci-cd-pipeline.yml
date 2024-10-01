@@ -22,10 +22,19 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          npm cache clean --force
+
+      - name: Check disk usage
+        run: df -h
 
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest .
+
+      - name: Cleanup Docker
+        run: |
+          docker system prune -af
 
       - name: Docker Login
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
