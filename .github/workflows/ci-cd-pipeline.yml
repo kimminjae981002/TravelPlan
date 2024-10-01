@@ -57,7 +57,7 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/nginx.conf
           sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/sites-enabled/default
-          sudo systemctl restart nginx
+          sudo systemctl reload nginx
           "
 
           # 기존 컨테이너 중지 및 제거
@@ -78,5 +78,5 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/nginx.conf
           sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/sites-enabled/default
-          sudo systemctl restart nginx
+          sudo systemctl reload nginx
           "
