@@ -107,7 +107,7 @@ export class UserController {
     const refreshToken = req.cookies['jwt'];
 
     if (!refreshToken) {
-      throw new UnauthorizedException('리프레시 토큰이 없습니다.');
+      throw new UnauthorizedException('리프레시 토큰이 유효하지 않습니다.');
     }
 
     try {
@@ -117,14 +117,5 @@ export class UserController {
     } catch (error) {
       throw new UnauthorizedException('리프레시 토큰이 유효하지 않습니다.');
     }
-  }
-}
-
-@ApiTags('Health')
-@Controller('health')
-export class HealthController {
-  @Get()
-  checkHealth() {
-    return { status: 'OK' };
   }
 }

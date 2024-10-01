@@ -40,7 +40,7 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          # EC2에 도커 허브 로그인
+          # EC2에 도커 허브 계정
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
 
           # Docker 자원 정리
