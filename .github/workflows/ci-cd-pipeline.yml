@@ -46,6 +46,9 @@ jobs:
           # Docker 자원 정리
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker system prune -a -f"
 
+          # node_modules 삭제
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "rm -rf /home/ubuntu/TravelPlan/node_modules"
+
           # 새로운 이미지를 풀
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
 
@@ -99,3 +102,6 @@ jobs:
             exit 1
           fi
           "
+
+          # node_modules 다시 설치
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "cd /home/ubuntu/TravelPlan && npm install"
