@@ -1,6 +1,6 @@
 name: CI/CD Pipeline
 
-# main branch에 push or pr할 때 실행된다.
+# main 브랜치에 push 또는 pull request 할 때 실행
 on:
   push:
     branches:
@@ -25,37 +25,48 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-        # 도커 허브에 이미지 생성
+      # 도커 이미지 빌드
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest .
 
-        # 도커 허브에 로그인
+      # 도커 허브 로그인
       - name: Docker Login
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-        # 도커 허브에 내용 푸시
+      # 도커 이미지 푸시
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
 
-        # EC2 KEY
+      # EC2 SSH 키 설정
       - name: Setup SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > keypair.pem
           chmod 600 keypair.pem
 
-        # EC2 도커 허브에 로그인 하고 PULL을 땡기고 중지된 컨테이너 삭제 후 컨테이너를 삭제하고 재배포한다.
+      # EC2에 배포
       - name: Deploy to EC2
         run: |
+          # EC2에 도커 허브 로그인
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest || true"
+
+          # 새로운 이미지를 풀
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
+
+          # 기존 컨테이너를 중지하지 않고 새로운 컨테이너 실행
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo docker container prune -f
-          sudo docker image prune -a -f
-          CONTAINER_ID=\$(sudo docker ps -q --filter 'publish=3000');
+          sudo docker run -d --name blog-api-app-new -p 3000:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
+          "
+
+          # 기존 컨테이너 중지 및 제거
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=blog-api-app');
           if [ -n \"\$CONTAINER_ID\" ]; then
             sudo docker stop \$CONTAINER_ID;
             sudo docker rm \$CONTAINER_ID;
           fi
-           "
+          "
 
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker run -d -p 3000:3000 --env-file /home/ubuntu/TravelPlan/.env  ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
+          # 새로운 컨테이너를 기존 컨테이너 이름으로 변경
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+          sudo docker rename blog-api-app-new blog-api-app
+          "

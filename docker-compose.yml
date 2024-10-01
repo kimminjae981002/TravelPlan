@@ -12,7 +12,11 @@ services:
     depends_on:
       - db
     networks:
-      - travelplan_blog-net # 추가된 네트워크
+      - travelplan_blog-net
+    deploy:
+      update_config:
+        parallelism: 1 # 동시에 업데이트할 인스턴스 수
+        delay: 10s # 업데이트 간 대기 시간
 
   db:
     image: mysql:5.7
@@ -23,7 +27,7 @@ services:
     ports:
       - '3306:3306'
     networks:
-      - travelplan_blog-net # 추가된 네트워크
+      - travelplan_blog-net
 
   nginx:
     image: nginx:latest
@@ -33,8 +37,8 @@ services:
       - /etc/letsencrypt/archive/xn--9r2b17b.shop:/etc/letsencrypt/archive/xn--9r2b17b.shop
       - ./certs:/etc/letsencrypt
     ports:
-      - '80:80'
-      - '443:443'
+      - '8080:80'
+      - '8443:443'
     depends_on:
       - app
     networks:
