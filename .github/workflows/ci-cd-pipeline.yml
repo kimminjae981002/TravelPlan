@@ -49,9 +49,9 @@ jobs:
           # 새로운 이미지를 풀
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
 
-          # 새로운 컨테이너 실행
+          # 새로운 컨테이너 실행 (3001 포트 사용)
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo docker run -d --name app_new -p 3000:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
+          sudo docker run -d --name app_new -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
           "
 
           # 기존 컨테이너 중지 및 제거
@@ -63,9 +63,9 @@ jobs:
           fi
           "
 
-          # Nginx 설정 변경
+          # Nginx 설정 변경 (기존 포트에서 새로운 컨테이너로 리다이렉트)
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/server app:3000;/server app_new:3000;/' /etc/nginx/conf.d/default.conf
+          sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/conf.d/default.conf
           sudo nginx -s reload
           "
 
@@ -78,3 +78,4 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/conf.d/default.conf
           sudo nginx -s reload
+          "
