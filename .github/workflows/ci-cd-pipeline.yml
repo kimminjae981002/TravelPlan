@@ -56,14 +56,14 @@ jobs:
 
           # Nginx 설정 파일 수정
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/nginx.conf
+          sudo sed -i 's/server app:3000;/server app_new:3001;/' ./nginx.conf
           sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/sites-enabled/default
           "
 
           # Nginx 설정 파일 테스트 및 재시작
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           if sudo nginx -t; then
-            sudo systemctl reload nginx
+            sudo systemctl restart nginx
           else
             echo 'Nginx configuration test failed!'
             exit 1
