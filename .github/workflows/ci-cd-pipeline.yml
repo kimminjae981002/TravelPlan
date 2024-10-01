@@ -1,6 +1,5 @@
 name: CI/CD Pipeline
 
-# main 브랜치에 push 또는 pull request 할 때 실행
 on:
   push:
     branches:
@@ -52,21 +51,21 @@ jobs:
           # 새로운 이미지를 풀
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
 
-          # 기존 컨테이너를 중지하지 않고 새로운 컨테이너 실행
+          # 새로운 컨테이너 실행
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo docker run -d --name blog-api-app-new -p 3000:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
+          sudo docker run -d --name app_new -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
           "
 
           # 기존 컨테이너 중지 및 제거
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=blog-api-app');
+          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app');
           if [ -n \"\$CONTAINER_ID\" ]; then
             sudo docker stop \$CONTAINER_ID;
             sudo docker rm \$CONTAINER_ID;
           fi
           "
 
-          # 새로운 컨테이너를 기존 컨테이너 이름으로 변경
+          # 새로운 컨테이너를 기존 이름으로 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo docker rename blog-api-app-new blog-api-app
+          sudo docker rename app_new app
           "
