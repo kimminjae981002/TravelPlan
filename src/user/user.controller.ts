@@ -4,6 +4,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Get,
   Post,
   Req,
   Res,
@@ -116,5 +117,14 @@ export class UserController {
     } catch (error) {
       throw new UnauthorizedException('리프레시 토큰이 유효하지 않습니다.');
     }
+  }
+}
+
+@ApiTags('Health')
+@Controller('health')
+export class HealthController {
+  @Get()
+  checkHealth() {
+    return { status: 'OK' };
   }
 }
