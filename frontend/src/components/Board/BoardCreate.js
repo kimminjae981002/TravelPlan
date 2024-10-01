@@ -79,7 +79,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
           </Form.Group>
 
           <Form.Group controlId="formImage">
-            <Form.Label>이미지 업로드</Form.Label>
+            <Form.Label>이미지</Form.Label>
             <Form.Control
               type="file"
               accept="image/*"
