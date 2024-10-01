@@ -44,8 +44,7 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
 
           # Docker 자원 정리
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo docker system prune -a -f
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker system prune -a -f"
 
           # 새로운 이미지를 풀
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
