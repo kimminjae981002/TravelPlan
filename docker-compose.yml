@@ -1,6 +1,6 @@
 services:
   app_green:
-    container_name: green
+    container_name: app_green
     build:
       context: ./
       dockerfile: Dockerfile
