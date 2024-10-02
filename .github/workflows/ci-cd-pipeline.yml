@@ -69,3 +69,4 @@ jobs:
             sudo docker stop app_green &&
             sudo docker rm app_green
           fi
+          "
