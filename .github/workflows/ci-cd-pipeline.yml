@@ -46,7 +46,7 @@ jobs:
           # 현재 app_blue가 실행 중일 때 app_green 시작
           if [ \$(sudo docker ps -q --filter 'name=app_blue') ]; then
             echo 'Starting new container app_green...' &&
-            sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose-green.yml up -d &&
+            sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose.green.yml up -d &&
             echo 'Container app_green started.' &&
             echo 'Modifying Nginx to point to app_green...' &&
             sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
@@ -58,7 +58,7 @@ jobs:
             sudo docker rm app_blue
           else
             echo 'Starting new container app_blue...' &&
-            sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose-blue.yml up -d &&
+            sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose.blue.yml up -d &&
             echo 'Container app_blue started.' &&
             echo 'Modifying Nginx to point to app_blue...' &&
             sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/nginx.conf &&
