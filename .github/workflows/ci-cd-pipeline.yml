@@ -43,30 +43,29 @@ jobs:
             echo 'Pulling the latest Docker image...' &&
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
 
-            # 현재 app_blue가 실행 중일 때 app_green 시작
-            if [ \$(sudo docker ps -q --filter 'name=app_blue') ]; then
-              echo 'Starting new container app_green...' &&
-              sudo docker-compose -f docker-compose-green.yml up -d &&
-              echo 'Container app_green started.' &&
-              echo 'Modifying Nginx to point to app_green...' &&
-              sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
-              sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
-              sudo nginx -t &&
-              sudo systemctl reload nginx &&
-              echo 'Old container app_blue stopped and removed.' &&
-              sudo docker stop app_blue &&
-              sudo docker rm app_blue
-            else
-              echo 'Starting new container app_blue...' &&
-              sudo docker-compose -f docker-compose-blue.yml up -d &&
-              echo 'Container app_blue started.' &&
-              echo 'Modifying Nginx to point to app_blue...' &&
-              sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/nginx.conf &&
-              sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/sites-enabled/default &&
-              sudo nginx -t &&
-              sudo systemctl reload nginx &&
-              echo 'Old container app_green stopped and removed.' &&
-              sudo docker stop app_green &&
-              sudo docker rm app_green
-            fi
-          "
+          # 현재 app_blue가 실행 중일 때 app_green 시작
+          if [ \$(sudo docker ps -q --filter 'name=app_blue') ]; then
+            echo 'Starting new container app_green...' &&
+            sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose-green.yml up -d &&
+            echo 'Container app_green started.' &&
+            echo 'Modifying Nginx to point to app_green...' &&
+            sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
+            sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
+            sudo nginx -t &&
+            sudo systemctl reload nginx &&
+            echo 'Old container app_blue stopped and removed.' &&
+            sudo docker stop app_blue &&
+            sudo docker rm app_blue
+          else
+            echo 'Starting new container app_blue...' &&
+            sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose-blue.yml up -d &&
+            echo 'Container app_blue started.' &&
+            echo 'Modifying Nginx to point to app_blue...' &&
+            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/nginx.conf &&
+            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/sites-enabled/default &&
+            sudo nginx -t &&
+            sudo systemctl reload nginx &&
+            echo 'Old container app_green stopped and removed.' &&
+            sudo docker stop app_green &&
+            sudo docker rm app_green
+          fi
