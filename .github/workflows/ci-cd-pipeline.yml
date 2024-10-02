@@ -44,17 +44,18 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
             sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
-            sudo docker run -d --name app_new --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
+            # 새로운 컨테이너를 app_blue로 실행
+            sudo docker run -d --name app_blue --network travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
           "
 
           # Nginx 설정 파일 수정
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          if sudo docker ps -a | grep -q app_new; then
-            # Nginx 설정을 app_new로 변경
-            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_new:3000;/' /etc/nginx/nginx.conf &&
+          if sudo docker ps -a | grep -q app_blue; then
+            # Nginx 설정을 app_blue로 변경
+            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/nginx.conf &&
             sudo nginx -t && sudo systemctl reload nginx
           else
-            echo 'app_new container not created or not running!'
+            echo 'app_blue container not created or not running!'
             exit 1
           fi
           "
@@ -70,17 +71,17 @@ jobs:
 
           # 새로운 컨테이너 이름 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_new');
+          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_blue');
           if [ -n \"\$CONTAINER_ID\" ]; then
-            sudo docker rename app_new app_green
+            sudo docker rename app_blue app_green
           else
-            echo 'app_new container does not exist for renaming!'
+            echo 'app_blue container does not exist for renaming!'
             exit 1
           fi
           "
 
           # Nginx 설정 다시 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/proxy_pass http:\/\/app_new:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
+          sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
           sudo nginx -t && sudo systemctl reload nginx
           "
