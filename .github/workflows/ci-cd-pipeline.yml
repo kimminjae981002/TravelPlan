@@ -43,6 +43,10 @@ jobs:
             echo 'Pulling the latest Docker image...' &&
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
 
+            # 사용하지 않는 Docker 객체 삭제
+            echo 'Cleaning up unused Docker images and volumes...' &&
+            sudo docker system prune -a --volumes -f &&
+
           # 현재 app_blue가 실행 중일 때 app_green 시작
           if [ \$(sudo docker ps -q --filter 'name=app_blue') ]; then
             echo 'Starting new container app_green...' &&
