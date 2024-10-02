@@ -40,14 +40,11 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          # EC2에 도커 허브 계정
+          # EC2에 도커 허브 계정 로그인
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
 
           # Docker 자원 정리
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker system prune -a -f"
-
-          # node_modules 삭제
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "rm -rf /home/ubuntu/TravelPlan/node_modules"
 
           # 새로운 이미지를 풀
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
@@ -57,7 +54,7 @@ jobs:
           sudo docker run -d --name app_new --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
           "
 
-          # Nginx 설정 파일 수정 (app:3000을 app_new:3001로 변경)
+          # Nginx 설정 파일 수정 (기존 app:3000을 app_new:3001로 변경)
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/nginx.conf
           sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/sites-enabled/default
