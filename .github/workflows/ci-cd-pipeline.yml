@@ -44,14 +44,16 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
             sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
-            # 새로운 컨테이너를 app_blue로 실행
+
+          # 새로운 컨테이너를 app_blue로 실행
             sudo docker run -d --name app_blue --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
           "
 
           # Nginx 설정 파일 수정
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           if sudo docker ps -a | grep -q app_blue; then
-            # Nginx 설정을 app_blue로 변경
+
+          # Nginx 설정을 app_blue로 변경
             sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/nginx.conf &&
             sudo nginx -t && sudo systemctl reload nginx
           else
