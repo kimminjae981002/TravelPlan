@@ -54,9 +54,20 @@ jobs:
             sudo docker ps -a
           "
 
+          # Nginx 설정 파일 수정 (app_green에서 app_blue로 변경)
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            echo 'Modifying Nginx configuration to point to app_blue...' &&
+            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/nginx.conf &&
+            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/sites-enabled/default &&
+            echo 'Nginx configuration modified. Testing configuration...' &&
+            sudo nginx -t &&
+            echo 'Nginx configuration test passed. Reloading Nginx...' &&
+            sudo systemctl reload nginx
+          "
+
           # 기존 컨테이너 중지 및 제거
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          echo 'Stopping and removing the old container app_green if it exists...' &&
+          echo 'Stopping the old container app_green...' &&
           CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_green');
           if [ -n \"\$CONTAINER_ID\" ]; then
             sudo docker stop \$CONTAINER_ID &&
@@ -67,23 +78,7 @@ jobs:
           fi
           "
 
-          # Nginx 설정 파일 수정
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          if sudo docker ps -a | grep -q app_blue; then
-            echo 'Modifying Nginx configuration to use app_blue...' &&
-            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/nginx.conf &&
-            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/sites-enabled/default &&
-            echo 'Nginx configuration modified. Testing configuration...' &&
-            sudo nginx -t &&
-            echo 'Nginx configuration test passed. Reloading Nginx...' &&
-            sudo systemctl reload nginx
-          else
-            echo 'app_blue container not created or not running!'
-            exit 1
-          fi
-          "
-
-          # 새로운 컨테이너 이름 변경
+          # app_blue를 app_green으로 이름 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           echo 'Renaming app_blue to app_green...' &&
           CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_blue');
@@ -96,9 +91,9 @@ jobs:
           fi
           "
 
-          # Nginx 설정 다시 변경
+          # Nginx 설정 다시 변경 (app_green으로 리디렉션)
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          echo 'Changing Nginx configuration to point to app_green...' &&
+          echo 'Changing Nginx configuration to point back to app_green...' &&
           sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
           sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
           echo 'Nginx configuration changed. Testing configuration...' &&
