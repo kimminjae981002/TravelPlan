@@ -47,6 +47,9 @@ jobs:
             sudo docker run -d --name app_new --network travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
           "
 
+          # Docker 자원 정리
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker system prune -a -f"
+
           # Nginx 설정 파일 수정
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           if sudo docker ps -a | grep -q app_new; then
