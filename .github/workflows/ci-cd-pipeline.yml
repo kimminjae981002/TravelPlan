@@ -59,8 +59,8 @@ jobs:
 
           # Nginx 설정 파일 수정 (app:3000을 app_new:3001로 변경)
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/server app:3000;/server app_new:3000;/' /etc/nginx/nginx.conf
-          sudo sed -i 's/server app:3000;/server app_new:3000;/' /etc/nginx/sites-enabled/default
+          sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/nginx.conf
+          sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/sites-enabled/default
           "
 
           # Nginx 설정 파일 테스트
@@ -89,8 +89,8 @@ jobs:
 
           # Nginx 설정 다시 변경 (app_new:3001을 app:3000으로 변경)
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/server app_new:3000;/server app:3000;/' /etc/nginx/nginx.conf
-          sudo sed -i 's/server app_new:3000;/server app:3000;/' /etc/nginx/sites-enabled/default
+          sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/nginx.conf
+          sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/sites-enabled/default
           "
 
           # 최종 Nginx 설정 테스트 및 재시작
