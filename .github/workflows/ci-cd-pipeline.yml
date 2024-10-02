@@ -50,6 +50,7 @@ jobs:
               echo 'Container app_green started.' &&
               echo 'Modifying Nginx to point to app_green...' &&
               sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
+              sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
               sudo nginx -t &&
               sudo systemctl reload nginx &&
               echo 'Old container app_blue stopped and removed.' &&
@@ -61,6 +62,7 @@ jobs:
               echo 'Container app_blue started.' &&
               echo 'Modifying Nginx to point to app_blue...' &&
               sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/nginx.conf &&
+              sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/sites-enabled/default &&
               sudo nginx -t &&
               sudo systemctl reload nginx &&
               echo 'Old container app_green stopped and removed.' &&
