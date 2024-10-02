@@ -50,4 +50,5 @@ export const locations = [
   '제주',
   '서귀포',
   '신안',
+  '순창',
 ];
