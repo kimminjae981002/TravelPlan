@@ -38,70 +38,70 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > keypair.pem
           chmod 600 keypair.pem
 
-      - name: Deploy to EC2
-        run: |
-          # EC2에 도커 허브 계정
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
+          - name: Deploy to EC2
+          run: |
+            # EC2에 도커 허브 계정
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}'"
 
-          # Docker 자원 정리
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker system prune -a -f"
+            # Docker 자원 정리
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker system prune -a -f"
 
-          # node_modules 삭제
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "rm -rf /home/ubuntu/TravelPlan/node_modules"
+            # node_modules 삭제
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "rm -rf /home/ubuntu/TravelPlan/node_modules"
 
-          # 새로운 이미지를 풀
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
+            # 새로운 이미지를 풀
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest"
 
-          # 새로운 컨테이너 실행 (3001 포트 사용)
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo docker run -d --name app_new --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
-          "
+            # 새로운 컨테이너 실행 (3001 포트 사용)
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            sudo docker run -d --name app_new --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
+            "
 
-          # Nginx 설정 파일 수정 (app:3000을 app_new:3001로 변경)
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/nginx.conf
-          sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/sites-enabled/default
-          "
+            # Nginx 설정 파일 수정 (app:3000을 app_new:3001로 변경)
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/nginx.conf
+            sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/sites-enabled/default
+            "
 
-          # Nginx 설정 파일 테스트
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          if sudo nginx -t; then
-            sudo systemctl reload nginx
-          else
-            echo 'Nginx configuration test failed!'
-            exit 1
-          fi
-          "
+            # Nginx 설정 파일 테스트 및 리로드
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            if sudo nginx -t; then
+              sudo systemctl reload nginx
+            else
+              echo 'Nginx configuration test failed!'
+              exit 1
+            fi
+            "
 
-          # 기존 컨테이너 중지 및 제거
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app');
-          if [ -n \"\$CONTAINER_ID\" ]; then
-            sudo docker stop \$CONTAINER_ID;  # 기존 컨테이너 중지
-            sudo docker rm \$CONTAINER_ID;    # 기존 컨테이너 제거
-          fi
-          "
+            # 기존 컨테이너 중지 및 제거
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app');
+            if [ -n \"\$CONTAINER_ID\" ]; then
+              sudo docker stop \$CONTAINER_ID;  # 기존 컨테이너 중지
+              sudo docker rm \$CONTAINER_ID;    # 기존 컨테이너 제거
+            fi
+            "
 
-          # 새로운 컨테이너 이름 변경
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo docker rename app_new app
-          "
+            # 새로운 컨테이너 이름 변경
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            sudo docker rename app_new app
+            "
 
-          # Nginx 설정 다시 변경 (app_new:3001을 app:3000으로 변경)
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/nginx.conf
-          sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/sites-enabled/default
-          "
+            # Nginx 설정 다시 변경 (app_new:3001을 app:3000으로 변경)
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/nginx.conf
+            sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/sites-enabled/default
+            "
 
-          # 최종 Nginx 설정 테스트 및 재시작
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          if sudo nginx -t; then
-            sudo systemctl reload nginx
-          else
-            echo 'Nginx final configuration test failed!'
-            exit 1
-          fi
-          "
+            # 최종 Nginx 설정 테스트 및 재시작
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            if sudo nginx -t; then
+              sudo systemctl reload nginx
+            else
+              echo 'Nginx final configuration test failed!'
+              exit 1
+            fi
+            "
 
-          # node_modules 다시 설치
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "cd /home/ubuntu/TravelPlan && npm install"
+            # node_modules 다시 설치
+            ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "cd /home/ubuntu/TravelPlan && npm install"
