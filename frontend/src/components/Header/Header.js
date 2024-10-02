@@ -140,6 +140,7 @@ const Header = () => {
                 value={selectedCategory} // renamed
                 onChange={(e) => setSelectedCategory(e.target.value)} // renamed
               >
+                <option value="">카테고리를 선택하세요</option>
                 <option value="관광지">관광지</option>
                 <option value="맛집">맛집</option>
               </Select>
