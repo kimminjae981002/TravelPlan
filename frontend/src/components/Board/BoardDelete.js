@@ -15,7 +15,7 @@ export const handleBoardDelete = async (id, setBoards) => {
       const response = await performRequest(url, options);
 
       if (response && response.ok) {
-        alert('게시글 삭제가 되었습니다.');
+        alert('게시글이 삭제 되었습니다.');
         window.location.href = '/'; // 홈으로 리다이렉트
         setBoards((prevBoards) =>
           prevBoards.filter((board) => board.id !== id),
