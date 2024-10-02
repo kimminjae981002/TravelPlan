@@ -42,15 +42,30 @@ jobs:
         run: |
           # EC2에 도커 허브 계정 로그인
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            echo 'Logging into Docker Hub...' &&
             sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
+            echo 'Pulling the latest Docker image...' &&
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
 
-          # 새로운 컨테이너를 app_blue로 실행
-          echo 'Starting the new container app_blue...' &&
-          sudo docker run -d --name app_blue --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
-          echo 'Container app_blue started. Here are the current containers:' &&
-          sudo docker ps -a
-            "
+            # 새로운 컨테이너를 app_blue로 실행
+            echo 'Starting the new container app_blue...' &&
+            sudo docker run -d --name app_blue --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
+            echo 'Container app_blue started. Here are the current containers:' &&
+            sudo docker ps -a
+          "
+
+          # 기존 컨테이너 중지 및 제거
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+          echo 'Stopping and removing the old container app_green if it exists...' &&
+          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_green');
+          if [ -n \"\$CONTAINER_ID\" ]; then
+            sudo docker stop \$CONTAINER_ID &&
+            sudo docker rm \$CONTAINER_ID &&
+            echo 'Old container app_green stopped and removed.'
+          else
+            echo 'No old container app_green to stop.'
+          fi
+          "
 
           # Nginx 설정 파일 수정
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
@@ -67,20 +82,7 @@ jobs:
             exit 1
           fi
           "
-              
-          # 기존 컨테이너 중지 및 제거
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          echo 'Stopping and removing the old container app_green if it exists...' &&
-          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_green');
-          if [ -n \"\$CONTAINER_ID\" ]; then
-            sudo docker stop \$CONTAINER_ID &&
-            sudo docker rm \$CONTAINER_ID &&
-            echo 'Old container app_green stopped and removed.'
-          else
-            echo 'No old container app_green to stop.'
-          fi
-          "
-              
+
           # 새로운 컨테이너 이름 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           echo 'Renaming app_blue to app_green...' &&
@@ -93,7 +95,7 @@ jobs:
             exit 1
           fi
           "
-              
+
           # Nginx 설정 다시 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           echo 'Changing Nginx configuration to point to app_green...' &&
