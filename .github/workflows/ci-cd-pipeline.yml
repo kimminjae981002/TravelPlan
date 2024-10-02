@@ -55,6 +55,7 @@ jobs:
 
           # Nginx 설정을 app_blue로 변경
             sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/nginx.conf &&
+            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/sites-enabled/default &&
             sudo nginx -t && sudo systemctl reload nginx
           else
             echo 'app_blue container not created or not running!'
@@ -85,5 +86,6 @@ jobs:
           # Nginx 설정 다시 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
+          sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
           sudo nginx -t && sudo systemctl reload nginx
           "
