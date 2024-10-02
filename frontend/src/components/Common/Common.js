@@ -49,4 +49,5 @@ export const locations = [
   '거제',
   '제주',
   '서귀포',
+  '신안',
 ];
