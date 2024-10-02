@@ -47,13 +47,11 @@ jobs:
             sudo docker run -d --name app_new --network travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
           "
 
-          # Docker 자원 정리
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker system prune -a -f"
-
           # Nginx 설정 파일 수정
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           if sudo docker ps -a | grep -q app_new; then
-            sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/nginx.conf &&
+            # Nginx 설정을 app_new로 변경
+            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_new:3000;/' /etc/nginx/nginx.conf &&
             sudo nginx -t && sudo systemctl reload nginx
           else
             echo 'app_new container not created or not running!'
@@ -63,7 +61,7 @@ jobs:
 
           # 기존 컨테이너 중지 및 제거
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app');
+          CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_green');
           if [ -n \"\$CONTAINER_ID\" ]; then
             sudo docker stop \$CONTAINER_ID &&
             sudo docker rm \$CONTAINER_ID;
@@ -74,7 +72,7 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_new');
           if [ -n \"\$CONTAINER_ID\" ]; then
-            sudo docker rename app_new app
+            sudo docker rename app_new app_green
           else
             echo 'app_new container does not exist for renaming!'
             exit 1
@@ -83,9 +81,6 @@ jobs:
 
           # Nginx 설정 다시 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/server app_new:3001;/server app:3000;/' /etc/nginx/nginx.conf &&
+          sudo sed -i 's/proxy_pass http:\/\/app_new:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
           sudo nginx -t && sudo systemctl reload nginx
           "
-
-          # node_modules 다시 설치 (선택적)
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "cd /home/ubuntu/TravelPlan && npm install"

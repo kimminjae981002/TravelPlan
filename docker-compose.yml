@@ -1,12 +1,24 @@
 services:
-  app:
-    container_name: app
+  app_green:
+    container_name: green
     build:
       context: ./
       dockerfile: Dockerfile
     image: minjae981002/blog-api-app:latest
     ports:
       - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - travelplan_blog-net
+
+  app_blue:
+    container_name: blue
+    image: minjae981002/blog-api-app:latest
+    ports:
+      - '3001:3000' # 새로운 포트를 사용
     env_file:
       - .env
     depends_on:
@@ -36,8 +48,7 @@ services:
       - '8080:80'
       - '8443:443'
     depends_on:
-      - app
-      - app_new
+      - app_green # 초기에는 green 컨테이너를 사용
     networks:
       - travelplan_blog-net
 
