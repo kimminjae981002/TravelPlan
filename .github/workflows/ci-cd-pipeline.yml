@@ -52,8 +52,7 @@ jobs:
           # Nginx 설정 파일 수정
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           if sudo docker ps -a | grep -q app_blue; then
-
-          # Nginx 설정을 app_blue로 변경
+            # Nginx 설정을 app_blue로 변경
             sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/nginx.conf &&
             sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/sites-enabled/default &&
             sudo nginx -t && sudo systemctl reload nginx
@@ -62,6 +61,7 @@ jobs:
             exit 1
           fi
           "
+
 
           # 기존 컨테이너 중지 및 제거
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
@@ -85,7 +85,7 @@ jobs:
 
           # Nginx 설정 다시 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
-          sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
+          sudo sed -i 's/proxy_pass http:\/\/app_green:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
+          sudo sed -i 's/proxy_pass http:\/\/app_green:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
           sudo nginx -t && sudo systemctl reload nginx
           "
