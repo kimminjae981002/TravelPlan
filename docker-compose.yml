@@ -13,10 +13,6 @@ services:
       - db
     networks:
       - travelplan_blog-net
-    deploy:
-      update_config:
-        parallelism: 1 # 동시에 업데이트할 인스턴스 수
-        delay: 10s # 업데이트 간 대기 시간
 
   db:
     image: mysql:5.7
@@ -41,6 +37,7 @@ services:
       - '8443:443'
     depends_on:
       - app
+      - app_new
     networks:
       - travelplan_blog-net
 
