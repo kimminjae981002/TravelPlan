@@ -91,13 +91,21 @@ jobs:
           fi
           "
 
-          # Nginx 설정 다시 변경 (app_green으로 리디렉션)
+          # 6. app_green을 3000 포트에서 실행되도록 재시작
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          echo 'Changing Nginx configuration to point back to app_green...' &&
-          sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
-          sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
-          echo 'Nginx configuration changed. Testing configuration...' &&
-          sudo nginx -t &&
-          echo 'Nginx configuration test passed. Reloading Nginx...' &&
-          sudo systemctl reload nginx
+            echo 'Starting app_green on port 3000...' &&
+            sudo docker run -d --name app_green --network travelplan_travelplan_blog-net -p 3000:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
+            echo 'Container app_green started on port 3000. Here are the current containers:' &&
+            sudo docker ps -a
+          "
+                  
+          # 7. Nginx 설정을 다시 변경 (app_green으로 리디렉션)
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+            echo 'Changing Nginx configuration to point back to app_green...' &&
+            sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
+            sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
+            echo 'Nginx configuration changed. Testing configuration...' &&
+            sudo nginx -t &&
+            echo 'Nginx configuration test passed. Reloading Nginx...' &&
+            sudo systemctl reload nginx
           "
