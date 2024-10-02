@@ -1,0 +1,45 @@
+services:
+  app_blue:
+    container_name: app_blue
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: minjae981002/blog-api-app:latest
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - travelplan_blog-net
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - '3306:3306'
+    networks:
+      - travelplan_blog-net
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt/live/xn--9r2b17b.shop:/etc/letsencrypt/live/xn--9r2b17b.shop
+      - /etc/letsencrypt/archive/xn--9r2b17b.shop:/etc/letsencrypt/archive/xn--9r2b17b.shop
+      - ./certs:/etc/letsencrypt
+    ports:
+      - '8080:80'
+      - '8443:443'
+    depends_on:
+      - app_blue # 초기에는 blue 컨테이너를 사용
+    networks:
+      - travelplan_blog-net
+
+networks:
+  travelplan_blog-net:
+    driver: bridge
