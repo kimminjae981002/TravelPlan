@@ -54,6 +54,9 @@ jobs:
           sudo docker run -d --name app_new --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
           "
 
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "sudo docker ps -a"
+
+
           # Nginx 설정 파일 수정 (기존 app:3000을 app_new:3001로 변경)
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           sudo sed -i 's/server app:3000;/server app_new:3001;/' /etc/nginx/nginx.conf
