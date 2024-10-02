@@ -51,4 +51,5 @@ export const locations = [
   '서귀포',
   '신안',
   '순창',
+  '고창',
 ];
