@@ -46,46 +46,61 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
 
           # 새로운 컨테이너를 app_blue로 실행
-            sudo docker run -d --name app_blue --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest
-          "
+          echo 'Starting the new container app_blue...' &&
+          sudo docker run -d --name app_blue --network travelplan_travelplan_blog-net -p 3001:3000 --env-file /home/ubuntu/TravelPlan/.env ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
+          echo 'Container app_blue started. Here are the current containers:' &&
+          sudo docker ps -a
+            "
 
           # Nginx 설정 파일 수정
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           if sudo docker ps -a | grep -q app_blue; then
-            # Nginx 설정을 app_blue로 변경
+            echo 'Modifying Nginx configuration to use app_blue...' &&
             sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/nginx.conf &&
             sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3001;/' /etc/nginx/sites-enabled/default &&
-            sudo nginx -t && sudo systemctl reload nginx
+            echo 'Nginx configuration modified. Testing configuration...' &&
+            sudo nginx -t &&
+            echo 'Nginx configuration test passed. Reloading Nginx...' &&
+            sudo systemctl reload nginx
           else
             echo 'app_blue container not created or not running!'
             exit 1
           fi
           "
-
-
+              
           # 기존 컨테이너 중지 및 제거
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+          echo 'Stopping and removing the old container app_green if it exists...' &&
           CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_green');
           if [ -n \"\$CONTAINER_ID\" ]; then
             sudo docker stop \$CONTAINER_ID &&
-            sudo docker rm \$CONTAINER_ID;
+            sudo docker rm \$CONTAINER_ID &&
+            echo 'Old container app_green stopped and removed.'
+          else
+            echo 'No old container app_green to stop.'
           fi
           "
-
+              
           # 새로운 컨테이너 이름 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+          echo 'Renaming app_blue to app_green...' &&
           CONTAINER_ID=\$(sudo docker ps -q --filter 'name=app_blue');
           if [ -n \"\$CONTAINER_ID\" ]; then
-            sudo docker rename app_blue app_green
+            sudo docker rename app_blue app_green &&
+            echo 'Container renamed to app_green.'
           else
             echo 'app_blue container does not exist for renaming!'
             exit 1
           fi
           "
-
+              
           # Nginx 설정 다시 변경
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          sudo sed -i 's/proxy_pass http:\/\/app_green:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
-          sudo sed -i 's/proxy_pass http:\/\/app_green:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
-          sudo nginx -t && sudo systemctl reload nginx
+          echo 'Changing Nginx configuration to point to app_green...' &&
+          sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
+          sudo sed -i 's/proxy_pass http:\/\/app_blue:3001;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
+          echo 'Nginx configuration changed. Testing configuration...' &&
+          sudo nginx -t &&
+          echo 'Nginx configuration test passed. Reloading Nginx...' &&
+          sudo systemctl reload nginx
           "
