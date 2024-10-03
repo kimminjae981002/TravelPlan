@@ -58,8 +58,8 @@ export class OpenAiService {
         messages: [
           {
             role: 'user',
-            content: `나는 ${destination}에 ${duration} 동안 여행할 계획이야. 구성원은 ${who}끼리야. 현재 계절은 ${season}이야. ${destination}의 인기 있는 관광지와 ${who}와 맞고 ${season}을 판단하고 여행 일정을 짜줘 
-            그리고 간단하게 가게: 가게명, 관광지: 관광지명, 맛집: 맛집명 이런 식으로 작성하고, 이유를 알려줘`,
+            content: `나는 ${destination}에서 ${duration} 동안 여행할 계획이야. 구성원은 ${who}끼리야. 현재 계절은 ${season}이야. ${destination}의 인기 있는 관광지와 ${who}와 갈만한 곳과 현재 계절을 판단하고 여행 일정을 짜줘 
+            그리고 간단하게 가게: 가게명, 관광지: 관광지명, 맛집: 맛집명 이런 식으로 작성하고, 이유를 알려줘 답변을 할 때마다 일관성있게 답변해야해`,
           },
         ],
       }),
