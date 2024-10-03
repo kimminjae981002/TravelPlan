@@ -39,7 +39,9 @@ jobs:
         run: |
 
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-          git pull origin main &&  # 최신 코드 가져오기
+          # Navigate to your project directory
+          cd /home/ubuntu/TravelPlan &&  # 프로젝트 디렉토리로 이동
+          git pull origin main &&  # 최신 코드 가져오기cd
 
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
             # Docker Hub 로그인
