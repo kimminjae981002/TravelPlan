@@ -35,7 +35,7 @@ export const BoardImage = styled.img`
 `;
 
 export const BoardTitle = styled.h3`
-  font-size: 2em;
+  font-size: 20px;
   font-weight: bold;
   color: #333;
   margin: 15px;
@@ -45,7 +45,7 @@ export const BoardTitle = styled.h3`
 `;
 
 export const BoardDescription = styled.p`
-  font-size: 1.3em;
+  font-size: 15px;
   color: #777;
   overflow: hidden;
   display: -webkit-box;
