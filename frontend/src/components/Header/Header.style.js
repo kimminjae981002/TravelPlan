@@ -40,8 +40,7 @@ export const Title = styled.h1`
   color: black;
 
   @media (max-width: 600px) {
-    display: none;
-    font-size: 0.8rem;
+    font-size: 0.5rem;
   }
 `;
 
