@@ -56,6 +56,7 @@ async function bootstrap() {
     .setDescription('TravelPlan')
     .setVersion('1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
+    .addServer('https://xn--9r2b17b.shop')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document, {
