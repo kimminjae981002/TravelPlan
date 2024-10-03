@@ -51,15 +51,15 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
   return (
     <CenteredModal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>게시글 작성</Modal.Title>
+        <Modal.Title>후기 작성</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formTitle">
-            <Form.Label>제목</Form.Label>
+            <Form.Label>후기</Form.Label>
             <Form.Control
               type="text"
-              placeholder="게시글 제목을 입력하세요"
+              placeholder="제목을 입력하세요"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -71,7 +71,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
             <Form.Control
               as="textarea"
               rows={3}
-              placeholder="게시글 내용을 입력하세요"
+              placeholder="내용을 입력하세요"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required
