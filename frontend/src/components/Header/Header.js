@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   StyleHeader,
-  Logo,
   Title,
   ButtonContainer,
   Button,
