@@ -99,7 +99,7 @@ const Header = () => {
             </Button>
           </ButtonContainer>
 
-          <Box>후기를 작성해보세요.</Box>
+          <Box>후기 모음</Box>
         </div>
       </StyleHeader>
 

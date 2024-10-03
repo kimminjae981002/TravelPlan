@@ -71,7 +71,7 @@ const Navigation = () => {
                     onClick={handleShowBoardCreate}
                     style={{ color: 'white' }}
                   >
-                    게시글 작성
+                    후기 작성
                   </Nav.Link>
                   <Line className="line">│</Line>
                   <Nav.Link onClick={handleLogout} style={{ color: 'white' }}>

@@ -92,18 +92,6 @@ const BoardContainer = () => {
             <BoardDescription>{board.content}</BoardDescription>
             <BoardAuthor>
               <span style={{ fontWeight: 'bold' }}>by. {board.userName}</span>
-              <span style={{ fontSize: '10px', paddingTop: '10px' }}>
-                {new Date(
-                  new Date(board.createdAt).getTime() - 9 * 60 * 60 * 1000,
-                ).toLocaleString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                })}
-              </span>
             </BoardAuthor>
           </BoardCard>
         ))

@@ -1,15 +1,17 @@
 .App {
-  position: relative; /* 자식 요소를 위한 위치 설정 */
+  position: relative;
   text-align: center;
   background-image: url('https://plus.unsplash.com/premium_photo-1683121710572-7723bd2e235d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YWl8ZW58MHx8MHx8fDA%3D');
   background-size: cover;
   background-position: top left;
-  height: 100vh; /* 화면 전체를 커버하도록 설정 */
-  overflow: hidden; /* 내용이 넘어가지 않도록 설정 */
+  height: 100vh;
+  overflow: auto;
 }
 
 .AppBackground {
   background-color: rgba(0, 0, 0, 0.781);
+  height: 100vh;
+  overflow: auto;
 }
 
 .App-logo {
