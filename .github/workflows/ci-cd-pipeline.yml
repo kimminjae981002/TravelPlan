@@ -41,17 +41,15 @@ jobs:
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
           # Navigate to your project directory
           cd /home/ubuntu/TravelPlan &&  # 프로젝트 디렉토리로 이동
-          git pull origin main --no-rebas &&  # 최신 코드 가져오기cd
+          git pull origin main --no-rebase &&  # 최신 코드 가져오기cd
 
-          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
-            # Docker Hub 로그인
-            sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
-            echo 'Pulling the latest Docker image...' &&
-            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
-
-            # 사용하지 않는 Docker 객체 삭제
-            echo 'Cleaning up unused Docker images and volumes...' &&
-            sudo docker system prune -a --volumes -f &&
+          # Docker Hub 로그인
+          sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
+          echo 'Pulling the latest Docker image...' &&
+          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
+          # 사용하지 않는 Docker 객체 삭제
+          echo 'Cleaning up unused Docker images and volumes...' &&
+          sudo docker system prune -a --volumes -f &&
 
           # 현재 app_blue가 실행 중일 때 app_green 시작
           if [ \$(sudo docker ps -q --filter 'name=app_blue') ]; then
