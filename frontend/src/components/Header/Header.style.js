@@ -10,6 +10,10 @@ export const StyleHeader = styled.section`
   background-color: white;
   padding: 0 20px;
   border-bottom: 1px solid rgba(0, 133, 223, 0.44);
+
+  @media (max-width: 600px) {
+    padding: 30px 30px;
+  }
 `;
 
 export const Logo = styled.img`
