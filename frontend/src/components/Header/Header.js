@@ -11,6 +11,7 @@ import {
   Select,
   SubmitButton,
   CancelButton,
+  Box,
 } from './Header.style';
 import { locations } from '../Common/Common';
 import { fetchPlaces } from '../Travel/Travel';
@@ -78,29 +79,8 @@ const Header = () => {
       <StyleHeader>
         <div>
           <Title>
-            <div
-              style={{
-                marginBottom: '3px',
-                padding: '5px 5px',
-                color: 'rgba(90, 133, 223, 1.84)',
-                display: 'inline-block',
-                fontWeight: 'bold',
-                fontSize: '20px',
-              }}
-            >
-              TravelPlan
-            </div>
-            <div
-              style={{
-                marginTop: '10px',
-                marginBottom: '15px',
-                color: 'white',
-                fontSize: '25px',
-                fontWeight: 'bold',
-              }}
-            >
-              AI를 이용하여 여행을 계획해 드릴게요.
-            </div>
+            <div>TravelPlan</div>
+            <div>AI를 이용하여 여행을 계획해 드릴게요.</div>
           </Title>
           <ButtonContainer style={{ marginBottom: '60px' }}>
             <Button
@@ -119,18 +99,7 @@ const Header = () => {
             </Button>
           </ButtonContainer>
 
-          <div
-            style={{
-              color: 'white',
-              border: '1px solid black',
-              borderRadius: '5px',
-              padding: '6px 0px', // 위아래 패딩 유지
-              margin: '0 100px', // 양쪽 여백 추가
-              backgroundColor: 'rgba(100, 163, 223, 0.84)',
-            }}
-          >
-            게시글을 작성해보세요.
-          </div>
+          <Box>후기를 작성해보세요.</Box>
         </div>
       </StyleHeader>
 

@@ -36,13 +36,56 @@ export const Content = styled.div`
   }
 `;
 
-export const Title = styled.h1`
-  font-size: 18px;
-  margin: 0;
-  color: black;
+export const Title = styled.div`
+  text-align: center;
+
+  /* 기본 스타일 */
+  div {
+    display: inline-block;
+  }
+
+  /* 첫 번째 div 스타일 */
+  div:first-child {
+    margin-bottom: 3px;
+    padding: 5px 5px;
+    color: rgba(90, 133, 223, 1.84);
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  /* 두 번째 div 스타일 */
+  div:last-child {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  /* 미디어 쿼리 */
+  @media (max-width: 600px) {
+    div:first-child {
+      font-size: 20px; /* 작은 화면에서 폰트 크기 줄이기 */
+    }
+
+    div:last-child {
+      font-size: 15px; /* 작은 화면에서 폰트 크기 줄이기 */
+    }
+  }
+`;
+
+export const Box = styled.div`
+  color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 6px 0px;
+  margin: 0 120px;
+  background-color: rgba(100, 163, 223, 0.84);
+  margin-bottom: 50px;
 
   @media (max-width: 600px) {
-    font-size: 0.5rem;
+    font-size: 0.7rem;
+    margin: 30px 60px;
   }
 `;
 

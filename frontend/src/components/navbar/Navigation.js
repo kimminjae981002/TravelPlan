@@ -7,6 +7,7 @@ import Signup from './Signup';
 import Login from './Login';
 import Board from '../Board/BoardCreate';
 import { Logout } from './Logout'; // logout.js 경로에 맞게 수정
+import { Line } from './Navigation.style';
 
 const Navigation = () => {
   const [showModal, setShowModal] = useState(false);
@@ -52,10 +53,14 @@ const Navigation = () => {
         expand="lg"
         style={{
           borderBottom: '1px solid grey',
+          marginBottom: '60px',
         }}
       >
         <Container>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Toggle
+            aria-controls="responsive-navbar-nav"
+            style={{ color: 'white', backgroundColor: 'white', border: 'none' }}
+          />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
             <Nav>
@@ -68,7 +73,7 @@ const Navigation = () => {
                   >
                     게시글 작성
                   </Nav.Link>
-                  <span style={{ color: 'white', marginTop: '6px' }}>│</span>
+                  <Line className="line">│</Line>
                   <Nav.Link onClick={handleLogout} style={{ color: 'white' }}>
                     로그아웃
                   </Nav.Link>
@@ -78,7 +83,7 @@ const Navigation = () => {
                   <Nav.Link onClick={handleShow} style={{ color: 'white' }}>
                     회원가입
                   </Nav.Link>
-                  <span style={{ color: 'white', marginTop: '6px' }}>│</span>
+                  <Line className="line">│</Line>
                   <Nav.Link
                     onClick={handleShowLogin}
                     style={{ color: 'white' }}

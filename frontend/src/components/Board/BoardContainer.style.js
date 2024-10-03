@@ -21,7 +21,7 @@ export const BoardCard = styled.div`
   height: calc(60.33% - 100px);
   margin: 20px;
   padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: white;
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -57,7 +57,6 @@ export const BoardCard = styled.div`
 export const BoardImage = styled.img`
   width: 100%;
   height: 50%;
-  border-radius: 8px;
 `;
 
 export const BoardTitle = styled.h3`
