@@ -77,40 +77,61 @@ const Header = () => {
   return (
     <>
       <StyleHeader>
-        <Logo src="https://plus.unsplash.com/premium_photo-1684407617181-275e50374e95?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dHJpcHxlbnwwfHwwfHx8MA%3D%3D" />
         <div>
           <Title>
             <div
               style={{
                 marginBottom: '3px',
                 padding: '5px 5px',
-                color: 'rgba(0, 133, 223, 0.84)',
-                backgroundColor: 'rgba(0, 133, 223, 0.11)',
-                borderRadius: '5px',
+                color: 'rgba(90, 133, 223, 1.84)',
                 display: 'inline-block',
                 fontWeight: 'bold',
+                fontSize: '20px',
               }}
             >
               TravelPlan
             </div>
-            <div style={{ marginTop: '10px' }}>
+            <div
+              style={{
+                marginTop: '10px',
+                marginBottom: '15px',
+                color: 'white',
+                fontSize: '25px',
+                fontWeight: 'bold',
+              }}
+            >
               AI를 이용하여 여행을 계획해 드릴게요.
             </div>
-            <div style={{ marginTop: '10px' }}>
-              ↓ 글을 클릭하여 사용해보세요. ↓
-            </div>
           </Title>
-          <ButtonContainer>
-            <Button onClick={handlePlacesClick}>
-              지역 관광지/맛집 목록보기
+          <ButtonContainer style={{ marginBottom: '60px' }}>
+            <Button
+              onClick={handlePlacesClick}
+              style={{ marginRight: '10px', color: 'white' }}
+            >
+              지역 관광지/맛집 목록보기{' '}
+              <span style={{ color: 'rgba(0, 133, 223, 0.84)' }}>⇒</span>
             </Button>
             <Button
               onClick={handleTravelPlanClick}
-              style={{ marginLeft: '10px' }}
+              style={{ marginLeft: '10px', color: 'white' }}
             >
-              AI 여행 일정 짜줘
+              AI 여행 일정{' '}
+              <span style={{ color: 'rgba(0, 133, 223, 0.84)' }}>⇒</span>
             </Button>
           </ButtonContainer>
+
+          <div
+            style={{
+              color: 'white',
+              border: '1px solid black',
+              borderRadius: '5px',
+              padding: '6px 0px', // 위아래 패딩 유지
+              margin: '0 100px', // 양쪽 여백 추가
+              backgroundColor: 'rgba(100, 163, 223, 0.84)',
+            }}
+          >
+            게시글을 작성해보세요.
+          </div>
         </div>
       </StyleHeader>
 
@@ -140,6 +161,7 @@ const Header = () => {
                 value={selectedCategory} // renamed
                 onChange={(e) => setSelectedCategory(e.target.value)} // renamed
               >
+                <option value="">카테고리를 선택하세요</option>
                 <option value="관광지">관광지</option>
                 <option value="맛집">맛집</option>
               </Select>

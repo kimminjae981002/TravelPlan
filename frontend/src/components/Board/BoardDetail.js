@@ -62,7 +62,7 @@ const BoardDetail = ({ setBoards }) => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
-  if (!board) return <p>게시글을 찾을 수 없습니다.</p>;
+  if (!board) return <p>게시글이 없습니다.</p>;
 
   return (
     <Container>

@@ -4,7 +4,6 @@ export const Container = styled.div`
   width: 100%;
   height: 70vh;
   margin: 20rem 10rem 10rem 0;
-  background-color: white;
   color: black;
   display: flex;
   flex-wrap: wrap;

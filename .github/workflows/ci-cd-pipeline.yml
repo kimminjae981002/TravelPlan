@@ -37,11 +37,21 @@ jobs:
 
       - name: Deploy to EC2
         run: |
+
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+          # Navigate to your project directory
+          cd /home/ubuntu/TravelPlan &&  # 프로젝트 디렉토리로 이동
+          git pull origin main --no-rebas &&  # 최신 코드 가져오기cd
+
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
             # Docker Hub 로그인
             sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
             echo 'Pulling the latest Docker image...' &&
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
+
+            # 사용하지 않는 Docker 객체 삭제
+            echo 'Cleaning up unused Docker images and volumes...' &&
+            sudo docker system prune -a --volumes -f &&
 
           # 현재 app_blue가 실행 중일 때 app_green 시작
           if [ \$(sudo docker ps -q --filter 'name=app_blue') ]; then
@@ -49,8 +59,8 @@ jobs:
             sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose.green.yml up -d &&
             echo 'Container app_green started.' &&
             echo 'Modifying Nginx to point to app_green...' &&
-            sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/nginx.conf &&
-            sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3000;/' /etc/nginx/sites-enabled/default &&
+            sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3001;/' /etc/nginx/nginx.conf &&
+            sudo sed -i 's/proxy_pass http:\/\/app_blue:3000;/proxy_pass http:\/\/app_green:3001;/' /etc/nginx/sites-enabled/default &&
             sudo nginx -t &&
             sudo systemctl reload nginx &&
             echo 'Old container app_blue stopped and removed.' &&
@@ -61,8 +71,8 @@ jobs:
             sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose.blue.yml up -d &&
             echo 'Container app_blue started.' &&
             echo 'Modifying Nginx to point to app_blue...' &&
-            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/nginx.conf &&
-            sudo sed -i 's/proxy_pass http:\/\/app_green:3000;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/sites-enabled/default &&
+            sudo sed -i 's/proxy_pass http:\/\/app_green:3001;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/nginx.conf &&
+            sudo sed -i 's/proxy_pass http:\/\/app_green:3001;/proxy_pass http:\/\/app_blue:3000;/' /etc/nginx/sites-enabled/default &&
             sudo nginx -t &&
             sudo systemctl reload nginx &&
             echo 'Old container app_green stopped and removed.' &&

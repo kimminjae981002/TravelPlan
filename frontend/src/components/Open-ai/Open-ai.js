@@ -2,7 +2,7 @@ import { performRequest } from '../RefreshToken/RefreshToken';
 
 export const fetchTravelPlan = async (location, duration, who, season) => {
   if (!location || !duration || !who || !season) {
-    throw new Error('모든 정보를 입력해주세요.');
+    throw new Error('모든 정보를 선택하세요..');
   }
 
   const token = localStorage.getItem('accessToken');
