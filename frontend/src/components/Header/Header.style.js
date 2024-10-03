@@ -7,9 +7,7 @@ export const StyleHeader = styled.section`
   position: absolute;
   width: 100%;
   height: 25%;
-  background-color: white;
   padding: 0 20px;
-  border-bottom: 1px solid rgba(0, 133, 223, 0.44);
 
   @media (max-width: 600px) {
     padding: 30px 30px;
@@ -53,11 +51,12 @@ export const ButtonContainer = styled.div`
 `;
 
 export const Button = styled.button`
-  padding: 10px 20px;
+  padding: 3px 10px;
   font-size: 15px;
   background: none;
   color: grey;
-  border: none;
+  border: 1px solid grey;
+  border-radius: 30px;
   cursor: pointer;
 
   @media (max-width: 600px) {

@@ -51,21 +51,10 @@ const Navigation = () => {
         collapseOnSelect
         expand="lg"
         style={{
-          borderBottom: '1px solid rgba(0, 133, 223, 0.44)',
+          borderBottom: '1px solid grey',
         }}
       >
         <Container>
-          <Navbar.Brand href="/">
-            <img
-              src="https://files.logomakr.com/4Om7eB-LogoMakr.png" // 로고 이미지 URL
-              alt="Logo"
-              style={{
-                width: '130px', // 이미지 크기 조정
-                height: '40px', // 이미지 크기 조정
-                marginRight: '10px', // 텍스트와의 간격 조정
-              }}
-            />
-          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
@@ -73,15 +62,29 @@ const Navigation = () => {
               {/* 삼항연산자  */}
               {isLoggedIn ? (
                 <>
-                  <Nav.Link onClick={handleShowBoardCreate}>
+                  <Nav.Link
+                    onClick={handleShowBoardCreate}
+                    style={{ color: 'white' }}
+                  >
                     게시글 작성
                   </Nav.Link>
-                  <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
+                  <span style={{ color: 'white', marginTop: '6px' }}>│</span>
+                  <Nav.Link onClick={handleLogout} style={{ color: 'white' }}>
+                    로그아웃
+                  </Nav.Link>
                 </>
               ) : (
                 <>
-                  <Nav.Link onClick={handleShow}>회원가입</Nav.Link>
-                  <Nav.Link onClick={handleShowLogin}>로그인</Nav.Link>
+                  <Nav.Link onClick={handleShow} style={{ color: 'white' }}>
+                    회원가입
+                  </Nav.Link>
+                  <span style={{ color: 'white', marginTop: '6px' }}>│</span>
+                  <Nav.Link
+                    onClick={handleShowLogin}
+                    style={{ color: 'white' }}
+                  >
+                    로그인
+                  </Nav.Link>
                 </>
               )}
             </Nav>

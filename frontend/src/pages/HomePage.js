@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/Header/Header';
-import BoardContainer from '../components/Container/Container';
+import BoardContainer from '../components/Board/BoardContainer';
 
 const HomePage = ({ isLoggedIn }) => {
   return (
