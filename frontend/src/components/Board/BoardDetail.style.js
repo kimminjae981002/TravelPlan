@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  max-width: 800px;
-  margin: 20px auto;
   padding: 30px;
   background-color: #ffffff;
   border-radius: 10px;
