@@ -37,6 +37,10 @@ jobs:
 
       - name: Deploy to EC2
         run: |
+
+          ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
+          git pull origin main &&  # 최신 코드 가져오기
+
           ssh -i keypair.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "
             # Docker Hub 로그인
             sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
