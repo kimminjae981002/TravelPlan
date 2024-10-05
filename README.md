@@ -1,5 +1,7 @@
 # 🌐 LLM을 활용한 여행 일정 생성 프로젝트
 
+![화면 캡처 2024-10-04 020708](https://github.com/user-attachments/assets/d7fe73c5-87ad-4d05-b08b-80057389b5e5)
+
 ---
 
 - 🏠 배포 주소: https://main--kimminjae98.netlify.app
