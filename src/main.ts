@@ -23,7 +23,7 @@ async function bootstrap() {
 
   // cors 설정
   const corsOptions: CorsOptions = {
-    origin: 'https://main--kimminjae98.netlify.app',
+    origin: 'https://xn--9r2b17b.shop',
     credentials: true,
     exposedHeaders: ['Authorization', 'Content-Type'],
     methods: 'GET, POST, PUT, DELETE, OPTIONS, PATCH',
@@ -55,7 +55,7 @@ async function bootstrap() {
     .setTitle('TravelPlan API Project ')
     .setDescription('TravelPlan')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document, {
