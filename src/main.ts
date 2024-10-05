@@ -55,8 +55,7 @@ async function bootstrap() {
     .setTitle('TravelPlan API Project ')
     .setDescription('TravelPlan')
     .setVersion('1.0')
-    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
-    .addServer('https://xn--9r2b17b.shop') // HTTPS 프로토콜 설정
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document, {
