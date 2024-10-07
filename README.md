@@ -1,4 +1,6 @@
-# 🌐 AI를 이용한 여행 계획 생성 프로젝트
+# 🌐 LLM을 활용한 여행 일정 생성 프로젝트
+
+![화면 캡처 2024-10-04 020708](https://github.com/user-attachments/assets/d7fe73c5-87ad-4d05-b08b-80057389b5e5)
 
 ---
 
@@ -31,7 +33,7 @@
 ---
 
 백엔드는 Nest.js를 통해 Docker와 CI/CD를 이용해 AWS EC2에 배포되었고,
-프론트엔드 Netlify와 연동하기 위해 nginx를 이용해 HTTPS를 적용하였습니다.
+nginx를 이용해 HTTPS를 적용하였습니다.
 프론트엔드는 서버리스 아키텍처인 Netlify를 통해 배포되었습니다.
 
 ### 기술 스택
