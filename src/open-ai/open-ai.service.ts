@@ -58,11 +58,18 @@ export class OpenAiService {
         messages: [
           {
             role: 'user',
-            content: `나는 ${destination}에서 ${duration} 동안 여행할 예정이야 구성원은 ${who}이고, 
-            현재 계절은 ${season}이야. 
-            1일차 별로 ${duration} 동안 나눠서 ${destination} 
-            관광지 여행 일정 계획해줘 답변할 때마다 구성은 일관되게 답변해 1일차 오전: ${destination} 관광지 점심: 점심 메뉴 오후: ${destination}관광지 저녁: 저녁 메뉴 이런 식으로 답변 해야돼
-            내가 몇 번을 물어봐도 구성은 똑같이 답변하되 관광지나 메뉴는 변하게 해야돼 `,
+            content: `나는 ${destination}에서 ${duration} 동안 여행할 예정이야. 
+            구성원은 ${who}이고, 현재 계절은 ${season}이야.
+            여행 일정은 일정한 패턴으로 제공되어야 해. 
+            각 날의 일정은 다음과 같은 형식으로 고정되어야 해:
+            
+            1일차 오전: ${destination} 관광지 
+            점심: 점심 메뉴 
+            오후: ${destination} 관광지 
+            저녁: 저녁 메뉴
+            
+            답변을 할 때마다 이 구성을 엄격하게 따르고, 관광지와 메뉴만 바꿔줘.
+            구성을 변하지 않게 답변해줘. 그리고 간단한 이유를 적어줘`,
           },
         ],
       }),
