@@ -47,6 +47,7 @@ jobs:
           sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
           echo 'Pulling the latest Docker image...' &&
           sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
+
           # 사용하지 않는 Docker 객체 삭제
           echo 'Cleaning up unused Docker images and volumes...' &&
           sudo docker system prune -a --volumes -f &&
