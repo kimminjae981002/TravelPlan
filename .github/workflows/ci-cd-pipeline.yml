@@ -44,6 +44,7 @@ jobs:
 
           # Docker Hub 로그인
           sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
+
           echo 'Pulling the latest Docker image...' &&
           sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blog-api-app:latest &&
 
@@ -52,12 +53,12 @@ jobs:
           sudo docker system prune -a --volumes -f &&
 
           # 현재 실행 중인 컨테이너 확인
-          if [ -z "\$(sudo docker ps -q)" ]; then
+          if [ -z \"\$(sudo docker ps -q)\" ]; then
             echo 'No containers are running, starting app_blue...' &&
-            sudo docker-compose -f docker-compose.blue.yml up -d &&
+            sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose.blue.yml up -d &&
             echo 'Container app_blue started.'
           else
-            if [ \$(sudo docker ps -q --filter 'name=app_blue') ]; then
+            if [ -n \"\$(sudo docker ps -q --filter 'name=app_blue')\" ]; then
               echo 'Starting new container app_green...' &&
               sudo docker-compose -f /home/ubuntu/TravelPlan/docker-compose.green.yml up -d &&
               echo 'Container app_green started.' &&
