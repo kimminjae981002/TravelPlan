@@ -6,7 +6,7 @@ export const fetchTravelPlan = async (location, duration, who, season) => {
   }
 
   const token = localStorage.getItem('accessToken');
-  const url = 'https://xn--9r2b17b.shop/openAi';
+  const url = 'https://travelplan.store/openAi';
   const options = {
     method: 'POST',
     headers: {

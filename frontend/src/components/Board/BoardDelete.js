@@ -3,7 +3,7 @@ import { performRequest } from '../RefreshToken/RefreshToken';
 
 export const handleBoardDelete = async (id, setBoards) => {
   if (window.confirm('정말로 삭제하시겠습니까?')) {
-    const url = `https://xn--9r2b17b.shop/board/${id}`;
+    const url = `https://travelplan.store/board/${id}`;
     const options = {
       method: 'DELETE',
       headers: {

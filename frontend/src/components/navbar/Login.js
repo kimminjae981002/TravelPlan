@@ -16,7 +16,7 @@ const Login = ({ show, handleClose, onLoginSuccess, accessToken }) => {
     };
 
     try {
-      const response = await fetch('https://xn--9r2b17b.shop/user/login', {
+      const response = await fetch('https://travelplan.store/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

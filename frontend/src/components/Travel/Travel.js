@@ -10,7 +10,7 @@ export const fetchPlaces = async (selectedLocation, setSelectedCategory) => {
     throw new Error('로그인이 필요합니다.');
   }
 
-  const url = 'https://xn--9r2b17b.shop/travel';
+  const url = 'https://travelplan.store/travel';
   const options = {
     method: 'POST',
     headers: {

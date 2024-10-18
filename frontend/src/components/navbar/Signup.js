@@ -22,7 +22,7 @@ const Signup = ({ show, handleClose }) => {
     };
 
     try {
-      const response = await fetch('https://xn--9r2b17b.shop/user/signup', {
+      const response = await fetch('https://travelplan.store/user/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

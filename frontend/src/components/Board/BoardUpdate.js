@@ -11,7 +11,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
     const fetchBoard = async () => {
       try {
         const response = await fetch(
-          `https://xn--9r2b17b.shop/board/${boardId}`,
+          `https://travelplan.store/board/${boardId}`,
         );
         if (!response.ok) throw new Error('게시글을 찾을 수 없습니다.');
         const data = await response.json();
@@ -31,7 +31,7 @@ const BoardUpdate = ({ show, handleClose, boardId, onUpdate }) => {
     formData.append('title', editTitle);
     formData.append('content', editContent);
 
-    const url = `https://xn--9r2b17b.shop/board/${boardId}`;
+    const url = `https://travelplan.store/board/${boardId}`;
     const options = {
       method: 'PATCH',
       headers: {

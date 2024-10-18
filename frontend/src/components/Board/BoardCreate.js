@@ -19,7 +19,7 @@ const Board = ({ show, handleClose, isLoggedIn }) => {
       formData.append('image', image);
     }
 
-    const url = 'https://xn--9r2b17b.shop/board';
+    const url = 'https://travelplan.store/board';
     const options = {
       method: 'POST',
       body: formData,
