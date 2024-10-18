@@ -29,8 +29,8 @@ services:
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - /etc/letsencrypt/live/xn--9r2b17b.shop:/etc/letsencrypt/live/xn--9r2b17b.shop
-      - /etc/letsencrypt/archive/xn--9r2b17b.shop:/etc/letsencrypt/archive/xn--9r2b17b.shop
+      - /etc/letsencrypt/live/travelplan.store:/etc/letsencrypt/live/travelplan.store
+      - /etc/letsencrypt/archive/travelplan.store:/etc/letsencrypt/archive/travelplan.store
       - ./certs:/etc/letsencrypt
     ports:
       - '8080:80'
