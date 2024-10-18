@@ -42,7 +42,7 @@ const BoardContainer = () => {
       navigate(`/board/${id}`);
     } else if (response.status === 401 || response.status === 403) {
       // 토큰이 만료되었거나 유효하지 않은 경우
-      alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+      alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
       localStorage.removeItem('accessToken'); // 토큰 삭제
       // 로그인이 필요한 페이지로 이동
       navigate('/');
